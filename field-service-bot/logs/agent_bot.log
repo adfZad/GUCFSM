@@ -1,0 +1,328 @@
+2026-06-04 11:49:19,642 [INFO] ✓ DB schema validated
+2026-06-04 11:49:19,732 [INFO] ==================================================
+2026-06-04 11:49:19,732 [INFO] Agent Bot starting — hierarchical unit selection
+2026-06-04 11:49:19,733 [INFO] Compounds: Diamond, Pearl, Sapphire
+2026-06-04 11:49:19,733 [INFO] Maintenance: 9, Facilities: 10
+2026-06-04 11:49:19,733 [INFO] ==================================================
+2026-06-04 18:29:17,403 [INFO] ✓ DB schema validated
+2026-06-04 18:29:17,501 [INFO] ==================================================
+2026-06-04 18:29:17,501 [INFO] Agent Bot starting — Phase 5 (Approver Workflow)
+2026-06-04 18:29:17,501 [INFO] Compounds: Diamond, Pearl, Sapphire
+2026-06-04 18:29:17,501 [INFO] States: 34 total
+2026-06-04 18:29:17,501 [INFO] ==================================================
+2026-06-04 18:33:24,658 [INFO] Start: uid=8580506857 name=Riazuddin
+2026-06-04 18:37:29,308 [INFO] ✓ DB schema validated
+2026-06-04 18:37:29,388 [INFO] ==================================================
+2026-06-04 18:37:29,388 [INFO] Agent Bot starting — Phase 5 (Approver Workflow)
+2026-06-04 18:37:29,388 [INFO] Compounds: Diamond, Pearl, Sapphire
+2026-06-04 18:37:29,388 [INFO] States: 34 total
+2026-06-04 18:37:29,388 [INFO] ==================================================
+2026-06-04 18:52:32,065 [INFO] Start: uid=8580506857 name=Riazuddin
+2026-06-04 20:31:19,662 [INFO] ✓ DB schema validated
+2026-06-04 20:31:19,726 [INFO] ==================================================
+2026-06-04 20:31:19,727 [INFO] Agent Bot starting — Phase 6 (Notifications)
+2026-06-04 20:31:19,727 [INFO] Compounds: Diamond, Pearl, Sapphire
+2026-06-04 20:31:19,727 [INFO] States: 34 total
+2026-06-04 20:31:19,727 [INFO] ==================================================
+2026-06-04 20:43:16,749 [INFO] ✓ DB schema validated
+2026-06-04 20:43:16,817 [INFO] ==================================================
+2026-06-04 20:43:16,817 [INFO] Agent Bot starting — Phase 6 (Notifications)
+2026-06-04 20:43:16,817 [INFO] Compounds: Diamond, Pearl, Sapphire
+2026-06-04 20:43:16,817 [INFO] States: 34 total
+2026-06-04 20:43:16,817 [INFO] ==================================================
+2026-06-04 20:48:11,528 [INFO] ✓ DB schema validated
+2026-06-04 20:48:11,588 [INFO] ==================================================
+2026-06-04 20:48:11,589 [INFO] Agent Bot starting — Phase 6 (Notifications)
+2026-06-04 20:48:11,589 [INFO] Compounds: Diamond, Pearl, Sapphire
+2026-06-04 20:48:11,589 [INFO] States: 34 total
+2026-06-04 20:48:11,589 [INFO] ==================================================
+2026-06-04 20:50:38,551 [INFO] ✓ DB schema validated
+2026-06-04 20:50:38,606 [INFO] ==================================================
+2026-06-04 20:50:38,606 [INFO] Agent Bot starting — Phase 6 (Notifications)
+2026-06-04 20:50:38,606 [INFO] Compounds: Diamond, Pearl, Sapphire
+2026-06-04 20:50:38,606 [INFO] States: 34 total
+2026-06-04 20:50:38,606 [INFO] ==================================================
+2026-06-04 21:02:59,234 [INFO] ✓ DB schema validated
+2026-06-04 21:02:59,360 [INFO] ==================================================
+2026-06-04 21:02:59,361 [INFO] Agent Bot starting — Phase 6 (Notifications)
+2026-06-04 21:02:59,361 [INFO] Compounds: loaded dynamically from master_units_hierarchy
+2026-06-04 21:02:59,361 [INFO] States: 34 total
+2026-06-04 21:02:59,361 [INFO] ==================================================
+2026-06-04 22:13:18,027 [ERROR] Exception: httpx.ReadError: 
+NoneType: None
+
+2026-06-04 22:29:58,850 [ERROR] Exception: httpx.ReadError: 
+NoneType: None
+
+2026-06-04 23:15:28,654 [INFO] ✓ DB schema validated
+2026-06-04 23:15:28,763 [INFO] ==================================================
+2026-06-04 23:15:28,763 [INFO] Agent Bot starting — Phase 7 (Service Hierarchy)
+2026-06-04 23:15:28,764 [INFO] Compounds: loaded dynamically from master_units_hierarchy
+2026-06-04 23:15:28,764 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-04 23:15:28,764 [INFO] States: 35 total
+2026-06-04 23:15:28,764 [INFO] ==================================================
+2026-06-05 06:09:03,290 [INFO] Start: uid=8580506857 name=Riazuddin
+2026-06-05 06:09:23,027 [INFO] Start: uid=8580506857 name=Riazuddin
+2026-06-05 06:10:20,594 [INFO] Agent submission #5: uid=8580506857 unit=Pearl Tower 2 - Flat 1C compound=Pearl
+2026-06-05 06:10:20,696 [ERROR] Notification failed uid=7228949233: Chat not found
+2026-06-05 06:22:00,592 [INFO] ✓ DB schema validated
+2026-06-05 06:22:00,742 [INFO] ==================================================
+2026-06-05 06:22:00,743 [INFO] Agent Bot starting — Phase 7 (Service Hierarchy)
+2026-06-05 06:22:00,743 [INFO] Compounds: loaded dynamically from master_units_hierarchy
+2026-06-05 06:22:00,744 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-05 06:22:00,746 [INFO] States: 35 total
+2026-06-05 06:22:00,746 [INFO] ==================================================
+2026-06-05 06:38:26,764 [INFO] ✓ DB schema validated
+2026-06-05 06:38:26,830 [INFO] ==================================================
+2026-06-05 06:38:26,831 [INFO] Agent Bot starting — Phase 7 (Service Hierarchy)
+2026-06-05 06:38:26,831 [INFO] Compounds: loaded dynamically from master_units_hierarchy
+2026-06-05 06:38:26,831 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-05 06:38:26,831 [INFO] States: 35 total
+2026-06-05 06:38:26,831 [INFO] ==================================================
+2026-06-05 06:43:30,427 [INFO] Start: uid=8580506857 name=Riazuddin
+2026-06-05 07:05:57,117 [INFO] ✓ DB schema validated
+2026-06-05 07:05:57,183 [INFO] ==================================================
+2026-06-05 07:05:57,183 [INFO] Agent Bot starting — Phase 7 (Service Hierarchy)
+2026-06-05 07:05:57,183 [INFO] Compounds: loaded dynamically from master_units_hierarchy
+2026-06-05 07:05:57,184 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-05 07:05:57,184 [INFO] States: 35 total
+2026-06-05 07:05:57,184 [INFO] ==================================================
+2026-06-05 07:18:34,312 [INFO] Start: uid=8580506857 name=Riazuddin
+2026-06-05 07:19:45,185 [INFO] Agent submission #6: uid=8580506857 unit=Ewan Compound - V 08 compound=Ewan Compound
+2026-06-05 07:19:45,274 [ERROR] Notification failed uid=7228949233: Chat not found
+2026-06-05 07:19:52,440 [INFO] Start: uid=8580506857 name=Riazuddin
+2026-06-05 07:20:26,057 [INFO] Ticket #6 approved at level 1 by uid=8580506857
+2026-06-05 07:20:26,182 [ERROR] Notification failed uid=8767995042: Chat not found
+2026-06-10 07:30:41,718 [ERROR] Exception: httpx.ReadError: 
+NoneType: None
+
+2026-06-11 13:49:29,695 [ERROR] Exception: Bad Gateway
+NoneType: None
+
+2026-06-25 12:24:22,851 [INFO] [OK] DB schema validated
+2026-06-25 12:24:23,646 [INFO] Agent Bot � ready
+2026-06-25 12:24:23,646 [INFO] ==================================================
+2026-06-25 12:24:23,647 [INFO] Agent Bot starting � Phase 7 (Service Hierarchy)
+2026-06-25 12:24:23,647 [INFO] Compounds: loaded dynamically from master_units_hierarchy
+2026-06-25 12:24:23,647 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-25 12:24:23,648 [INFO] States: 35 total
+2026-06-25 12:24:23,648 [INFO] ==================================================
+2026-06-25 13:03:37,221 [ERROR] Exception: httpx.ReadError: 
+NoneType: None
+
+2026-06-25 19:05:00,918 [ERROR] Exception: httpx.ReadError: 
+NoneType: None
+
+2026-06-25 19:06:44,851 [ERROR] Exception: httpx.ReadError: 
+NoneType: None
+
+2026-06-26 13:03:01,399 [ERROR] Exception: httpx.ReadError: 
+NoneType: None
+
+2026-06-26 13:05:15,744 [ERROR] Exception: httpx.ReadError: 
+NoneType: None
+
+2026-06-26 14:59:29,267 [INFO] [OK] DB schema validated
+2026-06-26 14:59:29,788 [INFO] Agent Bot � ready
+2026-06-26 14:59:29,789 [INFO] ==================================================
+2026-06-26 14:59:29,789 [INFO] Agent Bot starting � Phase 7 (Service Hierarchy)
+2026-06-26 14:59:29,789 [INFO] Compounds: loaded dynamically from master_units_hierarchy
+2026-06-26 14:59:29,789 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-26 14:59:29,789 [INFO] States: 35 total
+2026-06-26 14:59:29,789 [INFO] ==================================================
+2026-06-26 14:59:32,357 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 14:59:36,655 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 14:59:37,884 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 14:59:43,516 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 14:59:45,255 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 14:59:50,784 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 14:59:53,346 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 14:59:57,033 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:00:00,717 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:00:06,453 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:00:12,189 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:00:20,437 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:00:28,520 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:00:40,343 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:00:44,545 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:01:02,260 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:01:06,460 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:01:32,542 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:01:36,695 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:02:07,287 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:02:11,482 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:02:41,999 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:02:46,196 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:03:16,768 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:58:48,021 [INFO] [OK] DB schema validated
+2026-06-26 15:58:48,468 [INFO] Agent Bot � ready
+2026-06-26 15:58:48,468 [INFO] ==================================================
+2026-06-26 15:58:48,469 [INFO] Agent Bot starting � Phase 7 (Service Hierarchy)
+2026-06-26 15:58:48,469 [INFO] Compounds: loaded dynamically from master_units_hierarchy
+2026-06-26 15:58:48,469 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-26 15:58:48,469 [INFO] States: 35 total
+2026-06-26 15:58:48,469 [INFO] ==================================================
+2026-06-26 15:58:55,019 [INFO] Start: uid=879271834 name=Shahab
+2026-06-26 15:59:45,153 [INFO] Agent submission #7: uid=879271834 unit=Pearl Compound 6213 compound=Pearl Compound
+2026-06-26 15:59:45,436 [ERROR] Notification failed uid=7228949233: Chat not found
+2026-06-27 04:29:57,129 [ERROR] Exception: httpx.ReadError: 
+NoneType: None
+
+2026-06-27 12:29:55,999 [ERROR] Exception: httpx.ReadError: 
+NoneType: None
+
+2026-06-27 14:09:02,859 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 11:25:49,111 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 13:47:00,286 [INFO] Start: uid=879271834 name=Shahab
+2026-06-29 13:47:45,884 [INFO] Agent submission #8: uid=879271834 unit=Pearl Compound 6213 compound=Pearl Compound
+2026-06-29 13:47:46,099 [ERROR] Notification failed uid=7228949233: Chat not found
+2026-06-29 15:17:41,242 [INFO] Start: uid=879271834 name=Shahab
+2026-06-29 15:17:56,248 [ERROR] Exception: 'datetime.datetime' object is not subscriptable
+Traceback (most recent call last):
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_application.py", line 1315, in process_update
+    await coroutine
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_handlers\conversationhandler.py", line 841, in handle_update
+    new_state: object = await handler.handle_update(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        update, application, handler_check_result, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_handlers\basehandler.py", line 159, in handle_update
+    return await self.callback(update, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Gravity\GUC Fields\GUC Field Service App\field-service-bot\app\agent_bot.py", line 380, in ex_unit_type_handler
+    return await _render_ticket_list(query, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Gravity\GUC Fields\GUC Field Service App\field-service-bot\app\agent_bot.py", line 416, in _render_ticket_list
+    date = (r["submitted_at"] or "")[:10]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+TypeError: 'datetime.datetime' object is not subscriptable
+
+2026-06-29 16:00:38,496 [INFO] [OK] DB schema validated
+2026-06-29 16:00:39,038 [INFO] Agent Bot � ready
+2026-06-29 16:00:39,038 [INFO] ==================================================
+2026-06-29 16:00:39,039 [INFO] Agent Bot starting � Phase 7 (Service Hierarchy)
+2026-06-29 16:00:39,039 [INFO] Compounds: loaded dynamically from master_units_hierarchy
+2026-06-29 16:00:39,039 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-29 16:00:39,039 [INFO] States: 35 total
+2026-06-29 16:00:39,039 [INFO] ==================================================
+2026-06-29 16:00:42,861 [INFO] Start: uid=879271834 name=Shahab
+2026-06-29 16:10:47,882 [INFO] [OK] DB schema validated
+2026-06-29 16:10:48,321 [INFO] Agent Bot � ready
+2026-06-29 16:10:48,321 [INFO] ==================================================
+2026-06-29 16:10:48,321 [INFO] Agent Bot starting � Phase 7 (Service Hierarchy)
+2026-06-29 16:10:48,321 [INFO] Compounds: loaded dynamically from master_units_hierarchy
+2026-06-29 16:10:48,321 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-29 16:10:48,327 [INFO] States: 35 total
+2026-06-29 16:10:48,327 [INFO] ==================================================
+2026-06-29 16:10:53,543 [INFO] Start: uid=879271834 name=Shahab
+2026-06-29 16:17:08,619 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:17:09,640 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:17:11,148 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:17:13,403 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:17:16,791 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:17:21,879 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:17:29,470 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:17:40,869 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:17:57,988 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:18:23,641 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:18:53,647 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:19:23,651 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:19:53,654 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:20:23,662 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:20:53,672 [ERROR] Exception: httpx.ConnectError: [Errno 11002] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:31:39,516 [INFO] [OK] DB schema validated
+2026-06-29 16:31:40,349 [INFO] Agent Bot � ready
+2026-06-29 16:31:40,350 [INFO] ==================================================
+2026-06-29 16:31:40,350 [INFO] Agent Bot starting � Phase 7 (Service Hierarchy)
+2026-06-29 16:31:40,350 [INFO] Compounds: loaded dynamically from master_units_hierarchy
+2026-06-29 16:31:40,351 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-29 16:31:40,351 [INFO] States: 35 total
+2026-06-29 16:31:40,351 [INFO] ==================================================
+2026-06-29 16:31:50,019 [INFO] Start: uid=879271834 name=Shahab
+2026-06-29 16:32:58,361 [INFO] Start: uid=879271834 name=Shahab
+2026-06-29 16:38:45,590 [INFO] Start: uid=8580506857 name=Riazuddin
+2026-06-29 16:39:23,443 [INFO] Start: uid=879271834 name=Shahab

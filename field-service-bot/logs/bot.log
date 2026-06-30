@@ -1,0 +1,1047 @@
+2026-06-04 11:49:19,657 [INFO] âœ“ DB schema validated
+2026-06-04 11:49:19,767 [INFO] ==================================================
+2026-06-04 11:49:19,767 [INFO] Field Service Bot starting â€” all paths active
+2026-06-04 11:49:19,767 [INFO] Maintenance services: 9
+2026-06-04 11:49:19,767 [INFO] Facility services: 10
+2026-06-04 11:49:19,767 [INFO] Follow-up statuses: 6
+2026-06-04 11:49:19,767 [INFO] ==================================================
+2026-06-04 20:31:24,915 [INFO] âœ“ DB schema validated
+2026-06-04 20:31:24,978 [INFO] ==================================================
+2026-06-04 20:31:24,978 [INFO] Field Service Bot starting â€” Phase 6 (Notifications)
+2026-06-04 20:31:24,978 [INFO] Maintenance services: 9
+2026-06-04 20:31:24,978 [INFO] Facility services: 10
+2026-06-04 20:31:24,978 [INFO] Follow-up statuses: 6
+2026-06-04 20:31:24,978 [INFO] ==================================================
+2026-06-04 23:15:33,956 [INFO] âœ“ DB schema validated
+2026-06-04 23:15:34,012 [INFO] ==================================================
+2026-06-04 23:15:34,013 [INFO] Field Service Bot starting â€” Phase 7 (Service Hierarchy)
+2026-06-04 23:15:34,013 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-04 23:15:34,013 [INFO] Follow-up statuses: 6
+2026-06-04 23:15:34,013 [INFO] ==================================================
+2026-06-05 06:38:26,738 [INFO] âœ“ DB schema validated
+2026-06-05 06:38:26,801 [INFO] ==================================================
+2026-06-05 06:38:26,802 [INFO] Field Service Bot starting â€” Phase 7 (Service Hierarchy)
+2026-06-05 06:38:26,802 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-05 06:38:26,802 [INFO] Follow-up statuses: 6
+2026-06-05 06:38:26,802 [INFO] ==================================================
+2026-06-08 01:11:02,405 [ERROR] Exception: Bad Gateway
+NoneType: None
+
+2026-06-11 14:00:33,092 [ERROR] Exception: Bad Gateway
+NoneType: None
+
+2026-06-12 14:19:07,671 [ERROR] Exception: httpx.ReadError: 
+NoneType: None
+
+2026-06-25 12:27:00,949 [INFO] [OK] DB schema validated
+2026-06-25 12:27:01,626 [INFO] Field Service Bot — ready (Resident)
+2026-06-25 12:27:01,626 [INFO] ==================================================
+2026-06-25 12:27:01,626 [INFO] Field Service Bot starting — Phase 7 (Service Hierarchy)
+2026-06-25 12:27:01,627 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-25 12:27:01,627 [INFO] Follow-up statuses: 6
+2026-06-25 12:27:01,627 [INFO] ==================================================
+2026-06-25 21:03:37,022 [ERROR] Exception: httpx.ReadError: 
+NoneType: None
+
+2026-06-26 14:59:13,168 [ERROR] Exception: AzureSqlPersistence.refresh_bot_data() takes 1 positional argument but 2 were given
+Traceback (most recent call last):
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_application.py", line 1297, in process_update
+    await context.refresh_data()
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_callbackcontext.py", line 227, in refresh_data
+    await self.application.persistence.refresh_bot_data(self.bot_data)
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+TypeError: AzureSqlPersistence.refresh_bot_data() takes 1 positional argument but 2 were given
+
+2026-06-26 14:59:17,611 [ERROR] Exception: AzureSqlPersistence.refresh_bot_data() takes 1 positional argument but 2 were given
+Traceback (most recent call last):
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_application.py", line 1297, in process_update
+    await context.refresh_data()
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_callbackcontext.py", line 227, in refresh_data
+    await self.application.persistence.refresh_bot_data(self.bot_data)
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+TypeError: AzureSqlPersistence.refresh_bot_data() takes 1 positional argument but 2 were given
+
+2026-06-26 14:59:26,368 [ERROR] Exception: AzureSqlPersistence.refresh_bot_data() takes 1 positional argument but 2 were given
+Traceback (most recent call last):
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_application.py", line 1297, in process_update
+    await context.refresh_data()
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_callbackcontext.py", line 227, in refresh_data
+    await self.application.persistence.refresh_bot_data(self.bot_data)
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+TypeError: AzureSqlPersistence.refresh_bot_data() takes 1 positional argument but 2 were given
+
+2026-06-26 14:59:33,102 [INFO] [OK] DB schema validated
+2026-06-26 14:59:33,518 [INFO] Field Service Bot — ready (Resident)
+2026-06-26 14:59:33,518 [INFO] ==================================================
+2026-06-26 14:59:33,518 [INFO] Field Service Bot starting — Phase 7 (Service Hierarchy)
+2026-06-26 14:59:33,518 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-26 14:59:33,518 [INFO] Follow-up statuses: 6
+2026-06-26 14:59:33,518 [INFO] ==================================================
+2026-06-26 14:59:35,535 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 14:59:39,725 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 14:59:40,954 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 14:59:45,664 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 14:59:47,407 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 14:59:52,935 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 14:59:55,392 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 14:59:58,470 [ERROR] Exception: AzureSqlPersistence.refresh_bot_data() takes 1 positional argument but 2 were given
+Traceback (most recent call last):
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_application.py", line 1297, in process_update
+    await context.refresh_data()
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_callbackcontext.py", line 227, in refresh_data
+    await self.application.persistence.refresh_bot_data(self.bot_data)
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+TypeError: AzureSqlPersistence.refresh_bot_data() takes 1 positional argument but 2 were given
+
+2026-06-26 14:59:58,934 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:00:03,176 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:00:08,912 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:00:13,620 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:00:21,813 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:00:25,971 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:00:41,779 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:00:46,081 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:01:07,894 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:01:12,296 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:01:38,393 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:01:42,554 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:02:03,794 [ERROR] Exception: AzureSqlPersistence.refresh_bot_data() takes 1 positional argument but 2 were given
+Traceback (most recent call last):
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_application.py", line 1297, in process_update
+    await context.refresh_data()
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_callbackcontext.py", line 227, in refresh_data
+    await self.application.persistence.refresh_bot_data(self.bot_data)
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+TypeError: AzureSqlPersistence.refresh_bot_data() takes 1 positional argument but 2 were given
+
+2026-06-26 15:02:13,123 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:02:17,322 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:02:48,450 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:02:52,751 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-26 15:04:06,297 [INFO] [OK] DB schema validated
+2026-06-26 15:04:06,731 [INFO] Field Service Bot — ready (Resident)
+2026-06-26 15:04:06,732 [INFO] ==================================================
+2026-06-26 15:04:06,732 [INFO] Field Service Bot starting — Phase 7 (Service Hierarchy)
+2026-06-26 15:04:06,732 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-26 15:04:06,732 [INFO] Follow-up statuses: 6
+2026-06-26 15:04:06,732 [INFO] ==================================================
+2026-06-26 15:04:58,821 [INFO] Start: uid=879271834 name=Shahab
+2026-06-26 15:05:21,756 [ERROR] Exception: 'units'
+Traceback (most recent call last):
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_application.py", line 1315, in process_update
+    await coroutine
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_handlers\conversationhandler.py", line 841, in handle_update
+    new_state: object = await handler.handle_update(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        update, application, handler_check_result, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_handlers\basehandler.py", line 159, in handle_update
+    return await self.callback(update, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Gravity\GUC Fields\GUC Field Service App\field-service-bot\app\bot.py", line 228, in unit_handler
+    context.user_data["unit"] = context.user_data["units"][idx]
+                                ~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'units'
+
+2026-06-26 15:05:24,609 [ERROR] Exception: 'units'
+Traceback (most recent call last):
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_application.py", line 1315, in process_update
+    await coroutine
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_handlers\conversationhandler.py", line 841, in handle_update
+    new_state: object = await handler.handle_update(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        update, application, handler_check_result, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_handlers\basehandler.py", line 159, in handle_update
+    return await self.callback(update, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Gravity\GUC Fields\GUC Field Service App\field-service-bot\app\bot.py", line 228, in unit_handler
+    context.user_data["unit"] = context.user_data["units"][idx]
+                                ~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'units'
+
+2026-06-26 15:05:31,835 [ERROR] Exception: 'units'
+Traceback (most recent call last):
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_application.py", line 1315, in process_update
+    await coroutine
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_handlers\conversationhandler.py", line 841, in handle_update
+    new_state: object = await handler.handle_update(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        update, application, handler_check_result, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_handlers\basehandler.py", line 159, in handle_update
+    return await self.callback(update, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Gravity\GUC Fields\GUC Field Service App\field-service-bot\app\bot.py", line 228, in unit_handler
+    context.user_data["unit"] = context.user_data["units"][idx]
+                                ~~~~~~~~~~~~~~~~~^^^^^^^^^
+KeyError: 'units'
+
+2026-06-26 15:09:08,966 [INFO] [OK] DB schema validated
+2026-06-26 15:09:09,385 [INFO] Field Service Bot — ready (Resident)
+2026-06-26 15:09:09,385 [INFO] ==================================================
+2026-06-26 15:09:09,385 [INFO] Field Service Bot starting — Phase 7 (Service Hierarchy)
+2026-06-26 15:09:09,385 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-26 15:09:09,385 [INFO] Follow-up statuses: 6
+2026-06-26 15:09:09,386 [INFO] ==================================================
+2026-06-26 15:09:16,964 [INFO] Start: uid=879271834 name=Shahab
+2026-06-26 15:12:49,408 [INFO] Submission #None: uid=879271834 unit=Diamond Compound 101 type=New Request
+2026-06-26 15:12:59,781 [INFO] Start: uid=879271834 name=Shahab
+2026-06-26 15:27:02,924 [INFO] [OK] DB schema validated
+2026-06-26 15:27:03,388 [INFO] Field Service Bot — ready (Resident)
+2026-06-26 15:27:03,388 [INFO] ==================================================
+2026-06-26 15:27:03,388 [INFO] Field Service Bot starting — Phase 7 (Service Hierarchy)
+2026-06-26 15:27:03,388 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-26 15:27:03,388 [INFO] Follow-up statuses: 6
+2026-06-26 15:27:03,388 [INFO] ==================================================
+2026-06-26 15:27:10,720 [INFO] Start: uid=879271834 name=Shahab
+2026-06-26 15:27:58,188 [ERROR] Exception: 'Update' object has no attribute 'edit_message_text'
+Traceback (most recent call last):
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_application.py", line 1315, in process_update
+    await coroutine
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_handlers\conversationhandler.py", line 841, in handle_update
+    new_state: object = await handler.handle_update(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        update, application, handler_check_result, context
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\ADMIN\AppData\Local\Programs\Python\Python314\Lib\site-packages\telegram\ext\_handlers\basehandler.py", line 159, in handle_update
+    return await self.callback(update, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Gravity\GUC Fields\GUC Field Service App\field-service-bot\app\bot.py", line 738, in back_to_sub_service
+    await query.edit_message_text(
+          ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Update' object has no attribute 'edit_message_text'
+
+2026-06-26 15:32:30,569 [INFO] [OK] DB schema validated
+2026-06-26 15:32:31,010 [INFO] Field Service Bot — ready (Resident)
+2026-06-26 15:32:31,011 [INFO] ==================================================
+2026-06-26 15:32:31,011 [INFO] Field Service Bot starting — Phase 7 (Service Hierarchy)
+2026-06-26 15:32:31,011 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-26 15:32:31,012 [INFO] Follow-up statuses: 6
+2026-06-26 15:32:31,012 [INFO] ==================================================
+2026-06-26 15:32:41,579 [INFO] Start: uid=879271834 name=Shahab
+2026-06-26 15:34:47,968 [INFO] Submission #6: uid=879271834 unit=Diamond Compound 101 type=New Request
+2026-06-27 04:29:57,118 [ERROR] Exception: httpx.ReadError: 
+NoneType: None
+
+2026-06-29 15:04:01,689 [ERROR] Exception: httpx.ReadError: 
+NoneType: None
+
+2026-06-29 16:17:06,813 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:17:07,850 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:17:09,367 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:17:11,625 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:17:15,013 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:17:20,089 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:17:27,698 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:17:39,102 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:17:56,196 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:18:21,839 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:18:51,859 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:19:21,864 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:19:51,878 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:20:21,891 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 16:20:51,916 [ERROR] Exception: httpx.ConnectError: [Errno 11002] getaddrinfo failed
+NoneType: None
+
+2026-06-29 17:09:50,642 [INFO] [OK] DB schema validated
+2026-06-29 17:09:51,493 [INFO] Field Service Bot — ready (Resident)
+2026-06-29 17:09:51,493 [INFO] ==================================================
+2026-06-29 17:09:51,493 [INFO] Field Service Bot starting — Phase 7 (Service Hierarchy)
+2026-06-29 17:09:51,493 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-29 17:09:51,494 [INFO] Follow-up statuses: 6
+2026-06-29 17:09:51,494 [INFO] ==================================================
+2026-06-29 17:09:53,090 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:09:57,331 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:09:58,598 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:10:03,368 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:10:05,112 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:10:10,639 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:10:13,097 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:10:16,681 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:10:20,263 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:10:25,896 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:10:31,531 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:10:39,927 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:10:48,117 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:11:00,113 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:11:04,441 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:11:22,320 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:11:26,516 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:11:52,836 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:11:57,032 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:12:27,650 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:12:31,848 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:13:02,570 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:13:06,768 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:13:37,289 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:13:41,482 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:13:46,405 [INFO] [OK] DB schema validated
+2026-06-29 17:13:46,992 [INFO] Field Service Bot — ready (Resident)
+2026-06-29 17:13:46,993 [INFO] ==================================================
+2026-06-29 17:13:46,993 [INFO] Field Service Bot starting — Phase 7 (Service Hierarchy)
+2026-06-29 17:13:46,993 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-29 17:13:46,993 [INFO] Follow-up statuses: 6
+2026-06-29 17:13:46,993 [INFO] ==================================================
+2026-06-29 17:14:12,736 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:14:17,039 [ERROR] Exception: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+NoneType: None
+
+2026-06-29 17:15:42,895 [INFO] [OK] DB schema validated
+2026-06-29 17:15:43,514 [INFO] Field Service Bot — ready (Resident)
+2026-06-29 17:15:43,515 [INFO] ==================================================
+2026-06-29 17:15:43,515 [INFO] Field Service Bot starting — Phase 7 (Service Hierarchy)
+2026-06-29 17:15:43,515 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-29 17:15:43,515 [INFO] Follow-up statuses: 6
+2026-06-29 17:15:43,515 [INFO] ==================================================
+2026-06-29 17:20:16,094 [INFO] [OK] DB schema validated
+2026-06-29 17:20:16,675 [INFO] Field Service Bot — ready (Resident)
+2026-06-29 17:20:16,675 [INFO] ==================================================
+2026-06-29 17:20:16,676 [INFO] Field Service Bot starting — Phase 7 (Service Hierarchy)
+2026-06-29 17:20:16,676 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-29 17:20:16,676 [INFO] Follow-up statuses: 6
+2026-06-29 17:20:16,676 [INFO] ==================================================
+2026-06-29 17:22:15,328 [INFO] Start: uid=879271834 name=Shahab
+2026-06-29 17:38:27,669 [INFO] [OK] DB schema validated
+2026-06-29 17:38:28,301 [INFO] Field Service Bot — ready (Resident)
+2026-06-29 17:38:28,301 [INFO] ==================================================
+2026-06-29 17:38:28,301 [INFO] Field Service Bot starting — Phase 7 (Service Hierarchy)
+2026-06-29 17:38:28,302 [INFO] Services: loaded dynamically from DB (services table)
+2026-06-29 17:38:28,302 [INFO] Follow-up statuses: 6
+2026-06-29 17:38:28,302 [INFO] ==================================================
+2026-06-29 17:38:33,660 [INFO] Start: uid=879271834 name=Shahab
+2026-06-29 17:39:03,412 [INFO] Submission #9: uid=879271834 unit=Diamond Compound 101 type=New Request
+2026-06-29 19:29:05,123 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:29:06,136 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:29:07,642 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:29:09,905 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:29:13,290 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:29:18,365 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:29:25,965 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:29:37,360 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:29:54,465 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:30:20,103 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:30:50,108 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:31:20,121 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:31:50,130 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:32:20,134 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:32:50,162 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:33:20,168 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:33:50,173 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:34:20,190 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:34:50,201 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:35:20,212 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:35:50,227 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:36:20,246 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:36:50,254 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:37:20,268 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:37:50,281 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:38:20,288 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:38:50,300 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:39:20,361 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:39:50,367 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:40:20,381 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:40:50,393 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:41:20,399 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:41:50,408 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:42:20,420 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:42:50,435 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:43:20,442 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:43:50,454 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:44:20,459 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:44:50,472 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:45:20,482 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:45:50,635 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:46:20,644 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:46:50,653 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:47:20,662 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:47:50,669 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:48:20,675 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:48:50,684 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:49:20,700 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:49:50,714 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:50:20,729 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:50:50,733 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:51:20,744 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:51:50,758 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:52:20,776 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:52:50,784 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:53:20,792 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:53:50,802 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:54:20,810 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:54:50,822 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:55:20,828 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:55:50,834 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:56:20,845 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:56:50,857 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:57:20,871 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:57:50,886 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:58:20,892 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:58:50,903 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:59:20,917 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 19:59:50,932 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:00:20,944 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:00:50,959 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:01:20,964 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:01:50,973 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:02:20,978 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:02:50,986 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:03:20,993 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:03:51,001 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:04:21,015 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:04:51,020 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:05:21,031 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:05:51,045 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:06:21,050 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:06:51,054 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:07:21,070 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:07:51,083 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:08:21,094 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:08:51,102 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:09:21,118 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:09:51,132 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:10:21,147 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:10:51,163 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:11:21,178 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:11:51,192 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:12:21,206 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:12:51,221 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:13:21,238 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:13:51,241 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:14:21,255 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:14:51,263 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:15:21,278 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:15:51,283 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:16:21,291 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:16:51,301 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:17:21,307 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:17:51,316 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:18:21,321 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:18:51,324 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:19:21,334 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:19:51,337 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:20:21,343 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:20:51,363 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:21:21,374 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:21:51,388 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:22:21,404 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:22:51,410 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:23:21,421 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:23:51,427 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:24:21,435 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:24:51,444 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:25:21,448 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:25:51,460 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:26:21,473 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:26:51,482 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:27:21,496 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:27:51,505 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:28:21,518 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:28:51,523 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:29:21,536 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:29:51,548 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:30:21,565 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:30:51,577 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:31:21,591 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:31:51,604 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:32:21,620 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:32:51,629 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:33:21,645 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:33:51,652 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:34:21,657 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:34:51,663 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:35:21,680 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:35:51,686 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:36:21,702 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:36:51,707 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:37:21,714 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:37:51,720 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:38:21,726 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:38:51,735 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:39:21,742 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:39:51,755 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:40:21,764 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:40:51,768 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:41:21,778 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:41:51,789 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:42:21,804 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:42:51,812 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:43:21,822 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:43:51,827 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:44:21,830 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:44:51,835 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:45:21,844 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:45:51,859 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:46:21,864 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:46:51,874 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:47:21,890 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:47:51,903 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:48:21,910 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:48:51,922 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:49:21,935 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:49:51,939 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:50:21,945 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:50:51,960 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:51:21,978 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:51:51,992 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:52:22,008 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:52:52,015 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:53:22,019 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:53:52,034 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:54:22,049 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:54:52,055 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:55:22,062 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:55:52,074 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:56:22,082 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:56:52,093 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:57:22,095 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:57:52,107 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:58:22,124 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:58:52,139 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 20:59:22,155 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 21:10:00,976 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 21:10:01,981 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 21:10:03,483 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 21:10:05,748 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 21:10:09,131 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 21:10:14,200 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 21:10:21,799 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 21:10:33,199 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 21:10:50,293 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 21:11:15,931 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-29 21:11:45,945 [ERROR] Exception: httpx.ConnectError: [Errno 11001] getaddrinfo failed
+NoneType: None
+
+2026-06-30 04:27:10,513 [ERROR] Exception: httpx.ReadError: 
+NoneType: None
+

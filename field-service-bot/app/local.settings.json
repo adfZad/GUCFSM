@@ -1,0 +1,14 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "python",
+    "BOT_TOKEN": "",
+    "AGENT_BOT_TOKEN": "",
+    "DB_CONNECTION_STRING": "Driver={ODBC Driver 18 for SQL Server};Server=DESKTOP-5MEJ09S;Database=GUCFSM;Uid=sa;Pwd=Nokia@7610;TrustServerCertificate=yes;",
+    "WEBHOOK_SECRET": "dev-secret-change-in-production",
+    "WEBHOOK_BASE_URL": "http://localhost:7071",
+    "NOTIFICATIONS_ENABLED": "false",
+    "AZURE_BLOB_CONNECTION_STRING": ""
+  }
+}

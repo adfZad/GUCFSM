@@ -1,0 +1,50 @@
+main_category,category,sub_category
+Maintenance,Air Conditioning,AC Not Working
+Maintenance,Carpentry,Curtain
+Maintenance,Carpentry,Kitchen Cabinet
+Maintenance,Carpentry,Door related
+Maintenance,Carpentry,Window related
+Maintenance,Carpentry,Bedroom Cabinet
+Maintenance,Carpentry,Living room Cabinet
+Maintenance,Common Area,Building related
+Maintenance,Common Area,Elevator
+Maintenance,Common Area,Tiles
+Maintenance,Common Area,Parking tent repair
+Maintenance,Common Area,Fountain
+Maintenance,Electrical,Electrical Panel
+Maintenance,Electrical,Door Bell
+Maintenance,Electrical,Exhaust Fan
+Maintenance,Electrical,Lamp
+Maintenance,Electrical,Power Outlet Points
+Maintenance,Electrical,Tube light
+Maintenance,Electrical,Water Heater
+Maintenance,Plumbing,Bathtub/shower
+Maintenance,Plumbing,Broken Tap / Mixer
+Maintenance,Plumbing,Drains Issues
+Maintenance,Plumbing,Leakage Issue
+Maintenance,Plumbing,Water Seepage
+Maintenance,Plumbing,Water tank
+Maintenance,Painting,Full Paint
+Maintenance,Painting,Touch up
+Maintenance,Appliances,Cooker
+Maintenance,Appliances,Refrigerator
+Maintenance,Appliances,Washing Machine
+Maintenance,Appliances,Dish washer
+Facilities,Cleaning,Corridor / Stair
+Facilities,Cleaning,Elevator
+Facilities,Cleaning,Swimming Pool
+Facilities,Cleaning,Parking Area
+Facilities,Cleaning,General Cleaning issues
+Facilities,Garbage,Drum Issues
+Facilities,Garbage,Waste Collection
+Facilities,Clubhouse / Gym,Gym schedule
+Facilities,Clubhouse / Gym,Machine out of service
+Facilities,Clubhouse / Gym,Sauna Room
+Facilities,Landscaping,Changing Plants / tree
+Facilities,Landscaping,Cutting branches
+Facilities,Landscaping,Irrigation Pipeline
+Facilities,Recreation Area,Play area
+Facilities,Recreation Area,Playground
+Facilities,Recreation Area,Football / tennis court
+Facilities,Pest Control,Pest Control
+Facilities,Security,Security related issues

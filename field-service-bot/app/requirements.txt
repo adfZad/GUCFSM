@@ -1,0 +1,4 @@
+python-telegram-bot==22.6
+pyodbc>=5.0
+azure-functions
+azure-storage-blob

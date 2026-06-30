@@ -1,0 +1,10 @@
+services:
+  field-service-bot:
+    build: .
+    container_name: field-service-bot
+    env_file: .env
+    volumes:
+      - ./app:/app
+      - ./data:/data
+      - ./logs:/logs
+    restart: unless-stopped
