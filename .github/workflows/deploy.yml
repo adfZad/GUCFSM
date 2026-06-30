@@ -5,32 +5,31 @@ on:
     branches: [main, master]
     paths:
       - 'field-service-bot/app/**'
-      - 'migration/db.py'
-  workflow_dispatch:   # manual trigger from GitHub UI
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: production
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install dependencies
-        run: |
-          cd field-service-bot/app
-          pip install -r requirements.txt
-
       - name: Verify imports
         run: |
           cd field-service-bot/app
-          python -c "import py_compile
+          python -c "
+          import py_compile
           py_compile.compile('bot.py', doraise=True)
           py_compile.compile('agent_bot.py', doraise=True)
           py_compile.compile('function_app.py', doraise=True)
@@ -39,7 +38,7 @@ jobs:
 
       - name: Package for deployment
         run: |
-          mkdir -p deploy_package
+          mkdir deploy_package
           cp field-service-bot/app/function_app.py    deploy_package/
           cp field-service-bot/app/bot.py             deploy_package/
           cp field-service-bot/app/agent_bot.py       deploy_package/
@@ -48,25 +47,10 @@ jobs:
           cp field-service-bot/app/blob_storage.py    deploy_package/
           cp field-service-bot/app/host.json          deploy_package/
           cp field-service-bot/app/requirements.txt   deploy_package/
-          cd deploy_package
-          zip -r ../deploy.zip .
 
-      - name: Deploy to Azure Function App
+      - name: Deploy to Azure
         uses: Azure/functions-action@v1
         with:
           app-name: guc-field-service-func
           package: deploy_package
-          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
-
-      # Alternative: deploy via Azure CLI (uncomment if needed)
-      # - name: Login to Azure
-      #   uses: azure/login@v2
-      #   with:
-      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
-      #
-      # - name: Deploy via Azure CLI
-      #   run: |
-      #     az functionapp deployment source config-zip \
-      #       --resource-group guc-field-service-rg \
-      #       --name guc-field-service-func \
-      #       --src deploy.zip
+          sku: linux

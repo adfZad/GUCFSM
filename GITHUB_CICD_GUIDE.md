@@ -12,24 +12,42 @@ git remote add origin https://github.com/YOUR-ORG/YOUR-REPO.git
 git push -u origin main
 ```
 
-## Step 2 — Get Publish Profile from Azure
+## Step 2 — Create Azure Service Principal (one-time)
 
-1. Go to Azure Portal → Function App `guc-field-service-func`
-2. Overview → **Get publish profile** → Download
-3. Open the downloaded `.PublishSettings` file
-4. Copy its full content
+Run this in PowerShell (must be logged in to Azure):
 
-## Step 3 — Add GitHub Secret
+```powershell
+az ad sp create-for-rbac `
+  --name "guc-field-service-deploy" `
+  --role contributor `
+  --scopes /subscriptions/{your-subscription-id}/resourceGroups/guc-field-service-rg `
+  --sdk-auth
+```
 
-1. GitHub repo → Settings → Secrets and variables → Actions
-2. New repository secret
-3. Name: `AZURE_FUNCTIONAPP_PUBLISH_PROFILE`
-4. Value: paste the publish profile content
-5. Add secret
+This outputs JSON like:
+```json
+{
+  "clientId": "xxx",
+  "clientSecret": "xxx",
+  "subscriptionId": "xxx",
+  "tenantId": "xxx"
+}
+```
+
+To find your subscription ID:
+```powershell
+az account show --query id -o tsv
+```
+
+## Step 3 — Add GitHub Secrets
+
+Go to GitHub repo → Settings → Secrets and variables → Actions → New repository secret:
+
+| Secret Name | Value |
+|-------------|-------|
+| `AZURE_CREDENTIALS` | Paste the full JSON from Step 2 |
 
 ## Step 4 — Push to trigger deployment
-
-Any push to `main` branch that changes files in `field-service-bot/app/` will auto-deploy:
 
 ```powershell
 git add .
@@ -37,17 +55,22 @@ git commit -m "Update bot code"
 git push
 ```
 
-## Workflow Steps (automated)
+Monitor the run at: GitHub → Actions → Deploy to Azure Function App
+
+## What Runs on Every Push
 
 ```
-Push to GitHub
+Push to main
     │
     ▼
-GitHub Actions runner
-    ├── Checkout code
-    ├── Setup Python 3.11
-    ├── Install requirements (python-telegram-bot, pyodbc, etc.)
-    ├── Verify all .py files compile
-    ├── Package: copy 8 files → deploy.zip
-    └── Deploy to Azure Function App
+├── Checkout code
+├── azure/login (RBAC auth)
+├── Setup Python 3.11
+├── Verify all .py files compile
+├── Package 8 files → deploy_package/
+└── Azure/functions-action → deploy to guc-field-service-func
 ```
+
+## Manual Trigger
+
+Go to GitHub → Actions → "Deploy to Azure Function App" → Run workflow

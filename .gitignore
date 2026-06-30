@@ -1,0 +1,32 @@
+# Environment files (contains tokens)
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs
+logs/
+
+# Photos
+data/photos/
+
+# Database files
+*.db
+
+# IDE
+.vscode/
+.idea/
+
+# ZIP packages
+deploy.zip
+
+# Azure Functions
+.azurefunctions/
+local.settings.json
+
+# Temp scripts
+*.bat
+!run_agent.bat
+!run_resident.bat
