@@ -26,7 +26,7 @@ if not TOKEN:
             TOKEN = f.read().strip()
 
 DB_PATH   = os.environ.get("DB_PATH",    "/data/field_service.db")
-LOG_DIR   = os.environ.get("LOG_DIR",    "/logs")
+LOG_DIR   = os.environ.get("LOG_DIR",    "/tmp")
 os.makedirs(LOG_DIR, exist_ok=True)
 
 # ── Logging ─────────────────────────────────────────────────────────
@@ -231,7 +231,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     roles = _get_user_roles(uid)
     if not roles["is_field_agent"] and not roles["is_approver"]:
         await update.message.reply_text(
-            "⛔ You are not authorized.\nContact your administrator to be added."
+            f"⛔ You are not authorized.\n\nYour Telegram ID is: `{uid}`\nGive this ID to your administrator to be added.",
+            parse_mode="Markdown"
         )
         return ConversationHandler.END
 
@@ -262,8 +263,8 @@ async def main_menu_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     action = query.data.split(":", 1)[1]
 
     if action == "new":
-        uid = context.user_data["agent_uid"]
-        await query.edit_message_text("Select **Compound**:", reply_markup=_compound_keyboard(uid), parse_mode="Markdown")
+        uid = context.user_data.get("agent_uid", str(update.effective_user.id))
+        await query.edit_message_text("Select *Compound*:", reply_markup=_compound_keyboard(uid), parse_mode="Markdown")
         return COMPOUND
 
     if action == "existing":
@@ -340,7 +341,7 @@ def _unit_list_keyboard(uid: str, compound: str, prefix: str, back_cb: str) -> I
     return InlineKeyboardMarkup(buttons)
 
 async def _show_compound_screen(query, context) -> int:
-    uid = context.user_data["agent_uid"]
+    uid = context.user_data.get("agent_uid", str(update.effective_user.id))
     _clear_filter(context)
     context.user_data["tkt_page"] = 0
     compounds = _get_agent_compounds(uid)
@@ -369,7 +370,7 @@ async def ex_compound_handler(update: Update, context: ContextTypes.DEFAULT_TYPE
     compound = query.data.split(":", 1)[1]
     context.user_data["f_compound"] = compound
     context.user_data.pop("f_unit", None)
-    uid = context.user_data["agent_uid"]
+    uid = context.user_data.get("agent_uid", str(update.effective_user.id))
     await query.edit_message_text(
         f"**{compound}** — select unit:",
         reply_markup=_unit_list_keyboard(uid, compound, "ex_unit", "ex_utype:back"),
@@ -399,7 +400,7 @@ async def ex_show_now_handler(update: Update, context: ContextTypes.DEFAULT_TYPE
 
 # ── Agent ticket list ────────────────────────────────────────────────
 async def _render_ticket_list(query, context: ContextTypes.DEFAULT_TYPE):
-    uid = context.user_data["agent_uid"]
+    uid = context.user_data.get("agent_uid", str(update.effective_user.id))
     page = context.user_data.get("tkt_page", 0)
 
     sql, params = _build_ticket_query(uid, context)
@@ -427,7 +428,8 @@ async def _render_ticket_list(query, context: ContextTypes.DEFAULT_TYPE):
         date = _fmt_date(r["submitted_at"], 10)
         emoji = STATUS_EMOJI.get(r["status"], "❓")
         svc = (r["service"] or "?")[:18]
-        buttons.append([InlineKeyboardButton(f"{emoji} #{r['id']} | {svc} | {date}", callback_data=f"tkt:{r['id']}")])
+        status_text = (r["status"] or "unknown").replace("_", " ").title()
+        buttons.append([InlineKeyboardButton(f"{emoji} #{r['id']} | {svc} | {status_text} | {date}", callback_data=f"tkt:{r['id']}")])
 
     nav = []
     if page > 0:
@@ -551,7 +553,7 @@ async def ticket_detail_handler(update: Update, context: ContextTypes.DEFAULT_TY
 
     if action == "resubmit_confirm":
         tid = context.user_data["view_ticket_id"]
-        uid = context.user_data["agent_uid"]
+        uid = context.user_data.get("agent_uid", str(update.effective_user.id))
         try:
             conn = db()
             row = conn.execute("SELECT compound, unit, service FROM submissions WHERE id=?", (tid,)).fetchone()
@@ -646,7 +648,7 @@ async def complete_photo_handler(update: Update, context: ContextTypes.DEFAULT_T
 async def complete_confirm_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """COMPLETE_CONFIRM: final confirmation to close the ticket."""
     query = update.callback_query; await query.answer()
-    uid = context.user_data["agent_uid"]
+    uid = context.user_data.get("agent_uid", str(update.effective_user.id))
     tid = context.user_data["view_ticket_id"]
     cost = context.user_data.get("complete_cost", "")
     photo_path = context.user_data.get("complete_photo_path")
@@ -726,7 +728,7 @@ def _build_pending_approvals_query(uid: str, context) -> tuple:
 
 
 async def _render_approval_list(query, context):
-    uid = context.user_data["agent_uid"]
+    uid = context.user_data.get("agent_uid", str(update.effective_user.id))
     page = context.user_data.get("tkt_page", 0)
 
     sql, params = _build_pending_approvals_query(uid, context)
@@ -754,8 +756,9 @@ async def _render_approval_list(query, context):
         date = _fmt_date(r["submitted_at"], 10)
         emoji = STATUS_EMOJI.get(r["status"], "❓")
         svc = (r["service"] or "?")[:18]
+        status_text = (r["status"] or "unknown").replace("_", " ").title()
         buttons.append([InlineKeyboardButton(
-            f"{emoji} #{r['id']} | {svc} | {date}",
+            f"{emoji} #{r['id']} | {svc} | {status_text} | {date}",
             callback_data=f"appr_tkt:{r['id']}"
         )])
 
@@ -929,7 +932,7 @@ async def approval_note_handler(update: Update, context: ContextTypes.DEFAULT_TY
 
 async def _do_write_approval(context, reply_fn):
     """Write approval/rejection to DB and send confirmation."""
-    uid = context.user_data["agent_uid"]
+    uid = context.user_data.get("agent_uid", str(update.effective_user.id))
     tid = context.user_data["approval_tid"]
     level = context.user_data["approval_level"]
     action = context.user_data["approval_action"]
@@ -1007,7 +1010,7 @@ async def _do_write_approval(context, reply_fn):
 
 # ── Approver: All Tickets view ───────────────────────────────────────
 async def _render_approver_all_tickets(query, context):
-    uid = context.user_data["agent_uid"]
+    uid = context.user_data.get("agent_uid", str(update.effective_user.id))
     page = context.user_data.get("tkt_page", 0)
 
     conn = db()
@@ -1054,8 +1057,9 @@ async def _render_approver_all_tickets(query, context):
         date = _fmt_date(r["submitted_at"], 10)
         emoji = STATUS_EMOJI.get(r["status"], "❓")
         svc = (r["service"] or "?")[:18]
+        status_text = (r["status"] or "unknown").replace("_", " ").title()
         buttons.append([InlineKeyboardButton(
-            f"{emoji} #{r['id']} | {svc} | {date}",
+            f"{emoji} #{r['id']} | {svc} | {status_text} | {date}",
             callback_data=f"all_tkt:{r['id']}"
         )])
 
@@ -1154,7 +1158,7 @@ async def compound_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query; await query.answer()
     compound = query.data.split(":")[1]
     context.user_data["compound"] = compound
-    uid = context.user_data["agent_uid"]
+    uid = context.user_data.get("agent_uid", str(update.effective_user.id))
 
     conn = db()
     rows = conn.execute(
@@ -1186,14 +1190,14 @@ async def unit_type_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     action = data[1]
 
     if action == "back":
-        uid = context.user_data["agent_uid"]
+        uid = context.user_data.get("agent_uid", str(update.effective_user.id))
         await query.edit_message_text("Select **Compound**:",
             reply_markup=_compound_keyboard(uid), parse_mode="Markdown")
         return COMPOUND
 
     # action is the full_label of the selected unit
     context.user_data["unit"] = action
-    await query.edit_message_text(f"🏠 **{action}** selected.", parse_mode="Markdown")
+    await query.edit_message_text(f"🏠 *{action}* selected.", parse_mode="Markdown")
     return await show_request_type_callback(query, context)
 
 
@@ -1229,7 +1233,7 @@ async def request_type_handler(update: Update, context: ContextTypes.DEFAULT_TYP
         return FOLLOWUP_ID
     else:
         context.user_data["request_type"] = "Emergency"
-        await query.edit_message_text("🚨 **EMERGENCY** — describe the issue (min 5 chars):", parse_mode="Markdown")
+        await query.edit_message_text("🚨 *EMERGENCY* — describe the issue (min 5 chars):", parse_mode="Markdown")
         return EMERGENCY_DESC
 
 
@@ -1388,7 +1392,7 @@ async def confirm_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query; await query.answer()
     if query.data.split(":")[1] == "no":
         context.user_data.clear()
-        await query.edit_message_text("❌ Cancelled. Say **hi** to start over.", parse_mode="Markdown")
+        await query.edit_message_text("❌ Cancelled. Say *hi* to start over.", parse_mode="Markdown")
         return ConversationHandler.END
     return await write_submission(update, context, is_emergency=False)
 
@@ -1450,7 +1454,7 @@ async def followup_id_handler(update: Update, context: ContextTypes.DEFAULT_TYPE
         await update.message.reply_text("❌ Request ID not found. Try again:")
         return FOLLOWUP_ID
 
-    uid = context.user_data["agent_uid"]
+    uid = context.user_data.get("agent_uid", str(update.effective_user.id))
     assigned_conn = db()
     assigned = {r["full_label"] for r in assigned_conn.execute(
         "SELECT full_label FROM unit_agents WHERE telegram_user_id=?", (uid,)
@@ -1476,7 +1480,7 @@ async def followup_status_handler(update: Update, context: ContextTypes.DEFAULT_
         return await show_request_type_back(query, context)
     idx = int(query.data.split(":")[1])
     context.user_data["followup_status"] = FOLLOWUP_STATUSES[idx]
-    await query.edit_message_text(f"Status: **{FOLLOWUP_STATUSES[idx]}**\n\nAdd a note:", parse_mode="Markdown")
+    await query.edit_message_text(f"Status: *{FOLLOWUP_STATUSES[idx]}*\n\nAdd a note:", parse_mode="Markdown")
     return FOLLOWUP_NOTE
 
 async def followup_note_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -1548,7 +1552,7 @@ async def emergency_confirm_handler(update: Update, context: ContextTypes.DEFAUL
     query = update.callback_query; await query.answer()
     if query.data.split(":")[1] == "no":
         context.user_data.clear()
-        await query.edit_message_text("❌ Cancelled. Say **hi** to start over.", parse_mode="Markdown")
+        await query.edit_message_text("❌ Cancelled. Say *hi* to start over.", parse_mode="Markdown")
         return ConversationHandler.END
     return await write_submission(update, context, is_emergency=True)
 
@@ -1591,7 +1595,7 @@ async def timeout_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data.clear()
     try:
         await update.effective_message.reply_text(
-            "⏰ Session timed out. Say **hi** to continue.", parse_mode="Markdown"
+            "⏰ Session timed out. Say *hi* to continue.", parse_mode="Markdown"
         )
     except Exception:
         pass
@@ -1602,7 +1606,7 @@ async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> N
     logger.error(f"Exception: {context.error}\n{traceback.format_exc()}")
     if update and hasattr(update, 'effective_message'):
         try:
-            await update.effective_message.reply_text("⚠️ Something went wrong. Say **hi** to start over.", parse_mode="Markdown")
+            await update.effective_message.reply_text("⚠️ Something went wrong. Say *hi* to start over.", parse_mode="Markdown")
         except Exception:
             pass
 
@@ -1631,7 +1635,10 @@ def create_application():
 
     logger.info("[OK] DB schema validated")
 
-    app = Application.builder().token(TOKEN).build()  # persistence disabled for debugging
+    from persistence import AzureSqlPersistence
+    persistence = AzureSqlPersistence()
+
+    app = Application.builder().token(TOKEN).persistence(persistence).build()
     app.add_error_handler(error_handler)
 
     conv_handler = ConversationHandler(
@@ -1640,6 +1647,8 @@ def create_application():
             MessageHandler(filters.TEXT & ~filters.COMMAND, start),
         ],
         conversation_timeout=300,
+        persistent=True,
+        name="agent_main",
         states={
             MAIN_MENU: [CallbackQueryHandler(main_menu_handler, pattern=r"^main:")],
 
