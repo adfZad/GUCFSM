@@ -341,7 +341,7 @@ def _unit_list_keyboard(uid: str, compound: str, prefix: str, back_cb: str) -> I
     return InlineKeyboardMarkup(buttons)
 
 async def _show_compound_screen(query, context) -> int:
-    uid = context.user_data.get("agent_uid", str(update.effective_user.id))
+    uid = context.user_data.get("agent_uid", str(query.from_user.id))
     _clear_filter(context)
     context.user_data["tkt_page"] = 0
     compounds = _get_agent_compounds(uid)
@@ -400,7 +400,7 @@ async def ex_show_now_handler(update: Update, context: ContextTypes.DEFAULT_TYPE
 
 # ── Agent ticket list ────────────────────────────────────────────────
 async def _render_ticket_list(query, context: ContextTypes.DEFAULT_TYPE):
-    uid = context.user_data.get("agent_uid", str(update.effective_user.id))
+    uid = context.user_data.get("agent_uid", str(query.from_user.id))
     page = context.user_data.get("tkt_page", 0)
 
     sql, params = _build_ticket_query(uid, context)
@@ -728,7 +728,7 @@ def _build_pending_approvals_query(uid: str, context) -> tuple:
 
 
 async def _render_approval_list(query, context):
-    uid = context.user_data.get("agent_uid", str(update.effective_user.id))
+    uid = context.user_data.get("agent_uid", str(query.from_user.id))
     page = context.user_data.get("tkt_page", 0)
 
     sql, params = _build_pending_approvals_query(uid, context)
@@ -911,6 +911,8 @@ async def approval_note_handler(update: Update, context: ContextTypes.DEFAULT_TY
     is_reject = (context.user_data.get("approval_action") == "reject")
     tid = context.user_data["approval_tid"]
 
+    uid = context.user_data.get("agent_uid", str(update.effective_user.id))
+
     if update.callback_query:
         query = update.callback_query; await query.answer()
         action = query.data.split(":", 1)[1]
@@ -919,7 +921,7 @@ async def approval_note_handler(update: Update, context: ContextTypes.DEFAULT_TY
         # skip (only valid for approve)
         if not is_reject:
             context.user_data["approval_note"] = ""
-            return await _do_write_approval(context, query.edit_message_text)
+            return await _do_write_approval(uid, context, query.edit_message_text)
         return APPROVAL_NOTE
     else:
         note = sanitize(update.message.text.strip())
@@ -927,12 +929,11 @@ async def approval_note_handler(update: Update, context: ContextTypes.DEFAULT_TY
             await update.message.reply_text("⚠️ Rejection reason must be at least 5 characters:")
             return APPROVAL_NOTE
         context.user_data["approval_note"] = note
-        return await _do_write_approval(context, update.message.reply_text)
+        return await _do_write_approval(uid, context, update.message.reply_text)
 
 
-async def _do_write_approval(context, reply_fn):
+async def _do_write_approval(uid, context, reply_fn):
     """Write approval/rejection to DB and send confirmation."""
-    uid = context.user_data.get("agent_uid", str(update.effective_user.id))
     tid = context.user_data["approval_tid"]
     level = context.user_data["approval_level"]
     action = context.user_data["approval_action"]
@@ -1010,7 +1011,7 @@ async def _do_write_approval(context, reply_fn):
 
 # ── Approver: All Tickets view ───────────────────────────────────────
 async def _render_approver_all_tickets(query, context):
-    uid = context.user_data.get("agent_uid", str(update.effective_user.id))
+    uid = context.user_data.get("agent_uid", str(query.from_user.id))
     page = context.user_data.get("tkt_page", 0)
 
     conn = db()
