@@ -61,7 +61,7 @@ def _verify_secret(req):
 # ── Webhook: Resident Bot ────────────────────────────────────────────
 
 @app.function_name(name="webhook_resident")
-@app.route(route="webhook/resident", methods=["POST"])
+@app.route(route="webhook/resident", methods=["POST"], auth_level=func.AuthLevel.ANONYMOUS)
 async def webhook_resident(req: func.HttpRequest) -> func.HttpResponse:
     """Handle incoming Telegram updates for the resident bot (@GUCMain1bot)."""
     if not _verify_secret(req):
@@ -72,16 +72,19 @@ async def webhook_resident(req: func.HttpRequest) -> func.HttpResponse:
         body = req.get_json()
         update = Update.de_json(body, ptb_app.bot)
         await ptb_app.process_update(update)
+        await ptb_app.persistence.flush()
         return func.HttpResponse("OK", status_code=200)
-    except Exception:
+    except Exception as e:
+        import traceback
+        err = traceback.format_exc()
         logger.exception("Resident webhook failed")
-        return func.HttpResponse("OK", status_code=200)
+        return func.HttpResponse(f"Error: {err}", status_code=200)
 
 
 # ── Webhook: Agent Bot ───────────────────────────────────────────────
 
 @app.function_name(name="webhook_agent")
-@app.route(route="webhook/agent", methods=["POST"])
+@app.route(route="webhook/agent", methods=["POST"], auth_level=func.AuthLevel.ANONYMOUS)
 async def webhook_agent(req: func.HttpRequest) -> func.HttpResponse:
     """Handle incoming Telegram updates for the agent bot (@GUCMain2bot)."""
     if not _verify_secret(req):
@@ -92,16 +95,19 @@ async def webhook_agent(req: func.HttpRequest) -> func.HttpResponse:
         body = req.get_json()
         update = Update.de_json(body, ptb_app.bot)
         await ptb_app.process_update(update)
+        await ptb_app.persistence.flush()
         return func.HttpResponse("OK", status_code=200)
-    except Exception:
+    except Exception as e:
+        import traceback
+        err = traceback.format_exc()
         logger.exception("Agent webhook failed")
-        return func.HttpResponse("OK", status_code=200)
+        return func.HttpResponse(f"Error: {err}", status_code=200)
 
 
 # ── Register webhooks (run once after deploy) ────────────────────────
 
 @app.function_name(name="set_webhooks")
-@app.route(route="webhook/setup", methods=["POST"])
+@app.route(route="webhook/setup", methods=["POST"], auth_level=func.AuthLevel.ANONYMOUS)
 async def set_webhooks(req: func.HttpRequest) -> func.HttpResponse:
     """
     POST to this endpoint once after deployment to register webhooks with Telegram.
@@ -114,15 +120,19 @@ async def set_webhooks(req: func.HttpRequest) -> func.HttpResponse:
         )
 
     result = {}
-    for bot_type in ("resident", "agent"):
-        ptb_app = await _get_app(bot_type)
-        url = f"{base}/api/webhook/{bot_type}"
-        ok = await ptb_app.bot.set_webhook(
-            url=url,
-            secret_token=WEBHOOK_SECRET,
-            allowed_updates=Update.ALL_TYPES,
-        )
-        result[bot_type] = {"url": url, "ok": ok}
-        logger.info(f"setWebhook({bot_type}): {url} -> {ok}")
-
-    return func.HttpResponse(json.dumps(result), status_code=200)
+    try:
+        for bot_type in ("resident", "agent"):
+            ptb_app = await _get_app(bot_type)
+            url = f"{base}/api/webhook/{bot_type}"
+            ok = await ptb_app.bot.set_webhook(
+                url=url,
+                secret_token=WEBHOOK_SECRET,
+                allowed_updates=Update.ALL_TYPES,
+            )
+            result[bot_type] = {"url": url, "ok": ok}
+            logger.info(f"setWebhook({bot_type}): {url} -> {ok}")
+        return func.HttpResponse(json.dumps(result), status_code=200)
+    except Exception as e:
+        import traceback
+        err_msg = "".join(traceback.format_exception(type(e), e, e.__traceback__))
+        return func.HttpResponse(f"Error during initialization:\n{err_msg}", status_code=500)

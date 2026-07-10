@@ -1,4 +1,4 @@
-﻿"`"`"
+"`"`"
 State persistence for GUC Field Service Bot.
 Stores PTB conversation state in Azure SQL / local SQL Server.
 Replaces in-memory context.user_data — survives Azure Function cold starts.
@@ -37,6 +37,17 @@ class AzureSqlPersistence(BasePersistence):
     def __init__(self, conn_string=None):
         super().__init__(store_data=PersistenceInput(user_data=True, chat_data=True, bot_data=True))
         self._conn_string = conn_string or DB_CONNECTION_STRING
+        self._pending_tasks = set()
+
+    def _track(self, coro):
+        task = asyncio.create_task(coro)
+        self._pending_tasks.add(task)
+        task.add_done_callback(self._pending_tasks.discard)
+        return task
+
+    async def flush(self):
+        if self._pending_tasks:
+            await asyncio.gather(*self._pending_tasks, return_exceptions=True)
 
     # ── Low-level DB helpers ──────────────────────────────────────────
 
@@ -129,7 +140,7 @@ class AzureSqlPersistence(BasePersistence):
         return {int(k): v for k, v in raw.items()}
 
     async def update_user_data(self, user_id, data):
-        await asyncio.to_thread(self._save, "user", str(user_id), data)
+        await self._track(asyncio.to_thread(self._save, "user", str(user_id), data))
 
     async def refresh_user_data(self, user_id, user_data):
         fresh = await asyncio.to_thread(self._load, "user", str(user_id))
@@ -146,7 +157,7 @@ class AzureSqlPersistence(BasePersistence):
         return {int(k): v for k, v in raw.items()}
 
     async def update_chat_data(self, chat_id, data):
-        await asyncio.to_thread(self._save, "chat", str(chat_id), data)
+        await self._track(asyncio.to_thread(self._save, "chat", str(chat_id), data))
 
     async def refresh_chat_data(self, chat_id, chat_data):
         fresh = await asyncio.to_thread(self._load, "chat", str(chat_id))
@@ -162,7 +173,7 @@ class AzureSqlPersistence(BasePersistence):
         return await asyncio.to_thread(self._load, "bot", "bot")
 
     async def update_bot_data(self, data):
-        await asyncio.to_thread(self._save, "bot", "bot", data)
+        await self._track(asyncio.to_thread(self._save, "bot", "bot", data))
 
     async def refresh_bot_data(self, bot_data):
         fresh = await asyncio.to_thread(self._load, "bot", "bot")
@@ -191,7 +202,7 @@ class AzureSqlPersistence(BasePersistence):
             raw.pop(key_str, None)
         else:
             raw[key_str] = new_state
-        await asyncio.to_thread(self._save, "conv", name, raw)
+        await self._track(asyncio.to_thread(self._save, "conv", name, raw))
 
     # ── Callback data ─────────────────────────────────────────────────
 
@@ -203,5 +214,4 @@ class AzureSqlPersistence(BasePersistence):
 
     # ── Flush ─────────────────────────────────────────────────────────
 
-    async def flush(self):
-        pass
+
