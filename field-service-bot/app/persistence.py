@@ -1,4 +1,4 @@
-"`"`"
+"""
 State persistence for GUC Field Service Bot.
 Stores PTB conversation state in Azure SQL / local SQL Server.
 Replaces in-memory context.user_data — survives Azure Function cold starts.
@@ -9,7 +9,7 @@ Usage:
     app = Application.builder().token(TOKEN).persistence(persistence).build()
 
 Table: dbo.conversation_state (must exist — created by migration/sql/schema.sql)
-"`"`"
+"""
 
 import json
 import pyodbc
@@ -26,13 +26,13 @@ DB_CONNECTION_STRING = os.environ.get(
 
 
 class AzureSqlPersistence(BasePersistence):
-    "`"`"
+    """
     Stores user_data, chat_data, bot_data, and conversations
     in the conversation_state table via pyodbc.
 
     All data is serialized as JSON. Keys are converted to/from strings
     for DB storage (user_id, chat_id → str; conversation key tuples → JSON).
-    "`"`"
+    """
 
     def __init__(self, conn_string=None):
         super().__init__(store_data=PersistenceInput(user_data=True, chat_data=True, bot_data=True))
@@ -55,7 +55,7 @@ class AzureSqlPersistence(BasePersistence):
         return pyodbc.connect(self._conn_string, autocommit=False, timeout=10)
 
     def _load(self, entity_type, entity_id):
-        "`"`"Load JSON data for a single entity. Returns parsed dict or default."`"`"
+        """Load JSON data for a single entity. Returns parsed dict or default."""
         conn = self._connect()
         try:
             cursor = conn.cursor()
@@ -69,7 +69,7 @@ class AzureSqlPersistence(BasePersistence):
             conn.close()
 
     def _save(self, entity_type, entity_id, data):
-        "`"`"Upsert JSON data for a single entity. Empty data deletes the row."`"`"
+        """Upsert JSON data for a single entity. Empty data deletes the row."""
         if not data:
             self._delete(entity_type, entity_id)
             return
@@ -103,7 +103,7 @@ class AzureSqlPersistence(BasePersistence):
             conn.close()
 
     def _delete(self, entity_type, entity_id):
-        "`"`"Delete a single entity row."`"`"
+        """Delete a single entity row."""
         conn = self._connect()
         try:
             cursor = conn.cursor()
@@ -116,7 +116,7 @@ class AzureSqlPersistence(BasePersistence):
             conn.close()
 
     def _load_all(self, entity_type):
-        "`"`"Load all rows of a given entity_type. Returns dict keyed by entity_id (parsed)."`"`"
+        """Load all rows of a given entity_type. Returns dict keyed by entity_id (parsed)."""
         conn = self._connect()
         try:
             cursor = conn.cursor()
@@ -183,11 +183,11 @@ class AzureSqlPersistence(BasePersistence):
     # ── Conversations ─────────────────────────────────────────────────
 
     async def get_conversations(self, name):
-        "`"`"
+        """
         PTB stores conversations per handler name.
         Key is a tuple (user_id, user_id, ...) — serialized as JSON string key.
         Returns dict of {key: state}.
-        "`"`"
+        """
         raw = await asyncio.to_thread(self._load, "conv", name)
         result = {}
         for key_str, state in raw.items():
