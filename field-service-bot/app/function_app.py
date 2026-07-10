@@ -72,7 +72,7 @@ async def webhook_resident(req: func.HttpRequest) -> func.HttpResponse:
         body = req.get_json()
         update = Update.de_json(body, ptb_app.bot)
         await ptb_app.process_update(update)
-        await ptb_app.persistence.flush()
+        await ptb_app.update_persistence()
         return func.HttpResponse("OK", status_code=200)
     except Exception as e:
         import traceback
@@ -95,7 +95,7 @@ async def webhook_agent(req: func.HttpRequest) -> func.HttpResponse:
         body = req.get_json()
         update = Update.de_json(body, ptb_app.bot)
         await ptb_app.process_update(update)
-        await ptb_app.persistence.flush()
+        await ptb_app.update_persistence()
         return func.HttpResponse("OK", status_code=200)
     except Exception as e:
         import traceback
