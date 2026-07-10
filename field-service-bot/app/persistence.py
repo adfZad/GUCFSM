@@ -1,4 +1,4 @@
-"""
+﻿"`"`"
 State persistence for GUC Field Service Bot.
 Stores PTB conversation state in Azure SQL / local SQL Server.
 Replaces in-memory context.user_data — survives Azure Function cold starts.
@@ -9,11 +9,12 @@ Usage:
     app = Application.builder().token(TOKEN).persistence(persistence).build()
 
 Table: dbo.conversation_state (must exist — created by migration/sql/schema.sql)
-"""
+"`"`"
 
 import json
 import pyodbc
 import os
+import asyncio
 
 from telegram.ext import BasePersistence, PersistenceInput
 
@@ -25,13 +26,13 @@ DB_CONNECTION_STRING = os.environ.get(
 
 
 class AzureSqlPersistence(BasePersistence):
-    """
+    "`"`"
     Stores user_data, chat_data, bot_data, and conversations
     in the conversation_state table via pyodbc.
 
     All data is serialized as JSON. Keys are converted to/from strings
     for DB storage (user_id, chat_id → str; conversation key tuples → JSON).
-    """
+    "`"`"
 
     def __init__(self, conn_string=None):
         super().__init__(store_data=PersistenceInput(user_data=True, chat_data=True, bot_data=True))
@@ -43,7 +44,7 @@ class AzureSqlPersistence(BasePersistence):
         return pyodbc.connect(self._conn_string, autocommit=False, timeout=10)
 
     def _load(self, entity_type, entity_id):
-        """Load JSON data for a single entity. Returns parsed dict or default."""
+        "`"`"Load JSON data for a single entity. Returns parsed dict or default."`"`"
         conn = self._connect()
         try:
             cursor = conn.cursor()
@@ -57,7 +58,7 @@ class AzureSqlPersistence(BasePersistence):
             conn.close()
 
     def _save(self, entity_type, entity_id, data):
-        """Upsert JSON data for a single entity. Empty data deletes the row."""
+        "`"`"Upsert JSON data for a single entity. Empty data deletes the row."`"`"
         if not data:
             self._delete(entity_type, entity_id)
             return
@@ -73,7 +74,6 @@ class AzureSqlPersistence(BasePersistence):
                 serialized = json.dumps(data, ensure_ascii=False)
             except TypeError as e:
                 print(f"[PERSISTENCE] JSON dump failed for {entity_type}/{entity_id}: {e}")
-                print(f"[PERSISTENCE] Data keys: {list(data.keys())[:10] if hasattr(data, 'keys') else type(data)}")
                 return
             if exists:
                 cursor.execute(
@@ -92,7 +92,7 @@ class AzureSqlPersistence(BasePersistence):
             conn.close()
 
     def _delete(self, entity_type, entity_id):
-        """Delete a single entity row."""
+        "`"`"Delete a single entity row."`"`"
         conn = self._connect()
         try:
             cursor = conn.cursor()
@@ -105,7 +105,7 @@ class AzureSqlPersistence(BasePersistence):
             conn.close()
 
     def _load_all(self, entity_type):
-        """Load all rows of a given entity_type. Returns dict keyed by entity_id (parsed)."""
+        "`"`"Load all rows of a given entity_type. Returns dict keyed by entity_id (parsed)."`"`"
         conn = self._connect()
         try:
             cursor = conn.cursor()
@@ -125,74 +125,73 @@ class AzureSqlPersistence(BasePersistence):
     # ── User data ─────────────────────────────────────────────────────
 
     async def get_user_data(self):
-        raw = self._load_all("user")
+        raw = await asyncio.to_thread(self._load_all, "user")
         return {int(k): v for k, v in raw.items()}
 
     async def update_user_data(self, user_id, data):
-        self._save("user", str(user_id), data)
+        await asyncio.to_thread(self._save, "user", str(user_id), data)
 
     async def refresh_user_data(self, user_id, user_data):
-        fresh = self._load("user", str(user_id))
+        fresh = await asyncio.to_thread(self._load, "user", str(user_id))
         user_data.clear()
         user_data.update(fresh)
 
     async def drop_user_data(self, user_id):
-        self._delete("user", str(user_id))
+        await asyncio.to_thread(self._delete, "user", str(user_id))
 
     # ── Chat data ─────────────────────────────────────────────────────
 
     async def get_chat_data(self):
-        raw = self._load_all("chat")
+        raw = await asyncio.to_thread(self._load_all, "chat")
         return {int(k): v for k, v in raw.items()}
 
     async def update_chat_data(self, chat_id, data):
-        self._save("chat", str(chat_id), data)
+        await asyncio.to_thread(self._save, "chat", str(chat_id), data)
 
     async def refresh_chat_data(self, chat_id, chat_data):
-        fresh = self._load("chat", str(chat_id))
+        fresh = await asyncio.to_thread(self._load, "chat", str(chat_id))
         chat_data.clear()
         chat_data.update(fresh)
 
     async def drop_chat_data(self, chat_id):
-        self._delete("chat", str(chat_id))
+        await asyncio.to_thread(self._delete, "chat", str(chat_id))
 
     # ── Bot data ──────────────────────────────────────────────────────
 
     async def get_bot_data(self):
-        return self._load("bot", "bot")
+        return await asyncio.to_thread(self._load, "bot", "bot")
 
     async def update_bot_data(self, data):
-        self._save("bot", "bot", data)
+        await asyncio.to_thread(self._save, "bot", "bot", data)
 
     async def refresh_bot_data(self, bot_data):
-        fresh = self._load("bot", "bot")
+        fresh = await asyncio.to_thread(self._load, "bot", "bot")
         bot_data.clear()
         bot_data.update(fresh)
 
     # ── Conversations ─────────────────────────────────────────────────
 
     async def get_conversations(self, name):
-        """
+        "`"`"
         PTB stores conversations per handler name.
         Key is a tuple (user_id, user_id, ...) — serialized as JSON string key.
         Returns dict of {key: state}.
-        """
-        raw = self._load("conv", name)
+        "`"`"
+        raw = await asyncio.to_thread(self._load, "conv", name)
         result = {}
         for key_str, state in raw.items():
-            # Key is stored as JSON string of tuple: "[12345, 12345]"
             key_tuple = tuple(json.loads(key_str))
             result[key_tuple] = state
         return result
 
     async def update_conversation(self, name, key, new_state=None):
-        raw = self._load("conv", name)
+        raw = await asyncio.to_thread(self._load, "conv", name)
         key_str = json.dumps(key)
         if new_state is None:
             raw.pop(key_str, None)
         else:
             raw[key_str] = new_state
-        self._save("conv", name, raw)
+        await asyncio.to_thread(self._save, "conv", name, raw)
 
     # ── Callback data ─────────────────────────────────────────────────
 
@@ -205,5 +204,4 @@ class AzureSqlPersistence(BasePersistence):
     # ── Flush ─────────────────────────────────────────────────────────
 
     async def flush(self):
-        # pyodbc commits immediately; nothing to flush
         pass

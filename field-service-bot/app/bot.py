@@ -24,7 +24,7 @@ from logging.handlers import RotatingFileHandler
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import (
     Application, CallbackQueryHandler, CommandHandler,
-    ConversationHandler, MessageHandler, filters, ContextTypes
+    ConversationHandler, MessageHandler, filters, ContextTypes, TypeHandler
 )
 
 # Pre-compiled back-text pattern for case-insensitive matching
@@ -39,7 +39,7 @@ if not TOKEN:
             TOKEN = f.read().strip()
 
 DB_PATH   = os.environ.get("DB_PATH",    "/data/field_service.db")
-LOG_DIR   = os.environ.get("LOG_DIR",    "/logs")
+LOG_DIR   = os.environ.get("LOG_DIR",    "/tmp")
 os.makedirs(LOG_DIR, exist_ok=True)
 
 # ── Logging ─────────────────────────────────────────────────────────
@@ -954,8 +954,7 @@ async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> N
     if update and hasattr(update, 'effective_message'):
         try:
             await update.effective_message.reply_text(
-                "⚠️ Something went wrong. Say **hi** to start over.",
-                parse_mode="Markdown"
+                f"⚠️ Error: {str(context.error)}"
             )
         except Exception:
             pass
@@ -967,14 +966,19 @@ def validate_db_schema_local():
     Verify all expected columns exist in the submissions table.
     Returns (True, None) if OK, (False, error_message) if not.
     """
-    ok = validate_schema()
-    if not ok:
-        return False, (
-            "❌ DB schema mismatch! Missing columns in 'submissions' table.\n"
-            "   Run: python migration/validate.py\n"
-            "   Then restart this bot."
-        )
+    try:
+        validate_schema()
+    except Exception as err:
+        raise err
     return True, None
+
+
+async def load_state_from_db(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Load latest state from DB before processing update in a serverless environment."""
+    if update.effective_user:
+        await context.application.persistence.refresh_user_data(update.effective_user.id, context.user_data)
+    if update.effective_chat:
+        await context.application.persistence.refresh_chat_data(update.effective_chat.id, context.chat_data)
 
 
 def create_application():
@@ -988,8 +992,12 @@ def create_application():
 
     logger.info("[OK] DB schema validated")
 
-    app = Application.builder().token(TOKEN).build()  # persistence disabled for debugging
+    from persistence import AzureSqlPersistence
+    persistence = AzureSqlPersistence()
+
+    app = Application.builder().token(TOKEN).persistence(persistence).build()
     app.add_error_handler(error_handler)
+    app.add_handler(TypeHandler(Update, load_state_from_db), group=-1)
 
     conv_handler = ConversationHandler(
         entry_points=[
@@ -997,6 +1005,8 @@ def create_application():
             MessageHandler(filters.TEXT & ~filters.COMMAND, start),
         ],
         conversation_timeout=300,
+        persistent=True,
+        name="resident_main",
         states={
             PHONE: [MessageHandler(filters.TEXT & ~filters.COMMAND, phone_handler)],
             UNITS: [CallbackQueryHandler(unit_handler, pattern=r"^unit:")],

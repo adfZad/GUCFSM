@@ -14,7 +14,7 @@ from logging.handlers import RotatingFileHandler
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import (
     Application, CallbackQueryHandler, CommandHandler,
-    ConversationHandler, MessageHandler, filters, ContextTypes
+    ConversationHandler, MessageHandler, filters, ContextTypes, TypeHandler
 )
 
 # ── Config ──────────────────────────────────────────────────────────
@@ -1625,6 +1625,14 @@ def validate_db_schema_local():
 
 
 # ── Main ─────────────────────────────────────────────────────────────
+async def load_state_from_db(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Load latest state from DB before processing update in a serverless environment."""
+    if update.effective_user:
+        await context.application.persistence.refresh_user_data(update.effective_user.id, context.user_data)
+    if update.effective_chat:
+        await context.application.persistence.refresh_chat_data(update.effective_chat.id, context.chat_data)
+
+
 def create_application():
     """Create and configure the PTB Application. Called by both polling and webhook modes."""
     if not TOKEN:
@@ -1641,6 +1649,7 @@ def create_application():
 
     app = Application.builder().token(TOKEN).persistence(persistence).build()
     app.add_error_handler(error_handler)
+    app.add_handler(TypeHandler(Update, load_state_from_db), group=-1)
 
     conv_handler = ConversationHandler(
         entry_points=[
