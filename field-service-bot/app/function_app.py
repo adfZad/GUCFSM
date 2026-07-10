@@ -107,7 +107,7 @@ async def webhook_agent(req: func.HttpRequest) -> func.HttpResponse:
 # ── Register webhooks (run once after deploy) ────────────────────────
 
 @app.function_name(name="set_webhooks")
-@app.route(route="webhook/setup", methods=["POST"], auth_level=func.AuthLevel.ANONYMOUS)
+@app.route(route="webhook/setup", methods=["GET", "POST"], auth_level=func.AuthLevel.ANONYMOUS)
 async def set_webhooks(req: func.HttpRequest) -> func.HttpResponse:
     """
     POST to this endpoint once after deployment to register webhooks with Telegram.
