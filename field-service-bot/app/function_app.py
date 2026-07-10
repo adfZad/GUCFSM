@@ -114,6 +114,8 @@ async def set_webhooks(req: func.HttpRequest) -> func.HttpResponse:
     Requires WEBHOOK_BASE_URL env var (e.g., https://myapp.azurewebsites.net).
     """
     base = os.environ.get("WEBHOOK_BASE_URL", "").rstrip("/")
+    if base and not base.startswith("http"):
+        base = "https://" + base
     if not base:
         return func.HttpResponse(
             "Missing WEBHOOK_BASE_URL environment variable", status_code=400
