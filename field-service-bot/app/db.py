@@ -153,6 +153,9 @@ EXPECTED_SUBMISSIONS_COLUMNS = {
     "completion_photo_path", "completion_photo_file_id",
     "closed_by", "closed_at", "close_note",
     "cost_estimate", "cost_confirmed",
+    "assigned_technician_id", "scheduled_date", "inspection_diagnosis",
+    "repair_complexity", "boq_path", "boq_file_id", "quality_inspector_id",
+    "resident_confirmed",
 }
 
 
@@ -176,13 +179,11 @@ def validate_schema(db_path=None):
 
         missing = EXPECTED_SUBMISSIONS_COLUMNS - existing
         if missing:
-            print(f"  ERROR: DB schema validation FAILED - missing columns: {missing}", file=sys.stderr)
-            return False
+            raise RuntimeError(f"DB schema validation FAILED - missing columns: {missing}")
         print("  [OK] Schema validation passed")
         return True
     except pyodbc.Error as e:
-        print(f"  ERROR: DB schema validation FAILED: {e}", file=sys.stderr)
-        return False
+        raise RuntimeError(f"DB schema validation FAILED: {e}")
 
 
 # ── Insert helper (replaces cursor.lastrowid / SCOPE_IDENTITY) ─────────

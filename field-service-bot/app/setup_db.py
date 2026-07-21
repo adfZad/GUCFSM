@@ -50,6 +50,14 @@ EXPECTED_SCHEMA = {
         "closed_by": "TEXT",
         "closed_at": "TIMESTAMP",
         "close_note": "TEXT",
+        "assigned_technician_id": "TEXT",
+        "scheduled_date": "TEXT",
+        "inspection_diagnosis": "TEXT",
+        "repair_complexity": "TEXT",
+        "boq_path": "TEXT",
+        "boq_file_id": "TEXT",
+        "quality_inspector_id": "TEXT",
+        "resident_confirmed": "INTEGER DEFAULT 0",
     },
     "master_units_hierarchy": {
         "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
@@ -83,6 +91,7 @@ EXPECTED_SCHEMA = {
     "agents": {
         "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
         "telegram_user_id": "TEXT NOT NULL",
+        "telegram_username": "TEXT",
         "name": "TEXT NOT NULL",
         "role": "TEXT NOT NULL DEFAULT 'field_agent'",
         "compound": "TEXT",
@@ -116,6 +125,17 @@ SEED_AGENTS = (
     # Approver 2: Riaz + Shahbaz — all 9 compounds
     + [("8580506857", "Riaz",    "approver_2", c) for c in _COMPOUNDS]
     + [("8767995042", "Shahbaz", "approver_2", c) for c in _COMPOUNDS]
+)
+
+# SEED_AGENTS_EXTENDED (with username support)
+# Format: (telegram_user_id, telegram_username, name, role, compound)
+SEED_AGENTS_EXTENDED = (
+    [("", "Edz3399", "Edmondo", "senior_engineer", c) for c in _COMPOUNDS] +
+    [("", "Fareed_Mohammed_Farhan", "Farhan", "technician", c) for c in _COMPOUNDS] +
+    [("", "karimSubhani", "Karim", "technician", c) for c in _COMPOUNDS] +
+    [("", "AP_GUC", "Ayaz", "supervisor", c) for c in _COMPOUNDS] +
+    [("", "Afsal9186", "Afsal", "supervisor", c) for c in _COMPOUNDS] +
+    [("", "Tauseefahmadguc", "Tauseef", "facility_manager", c) for c in _COMPOUNDS]
 )
 
 
@@ -170,18 +190,23 @@ def create_tables(conn):
 
 
 def seed_agents(conn):
-    """Insert seed agents if the table is empty."""
-    count = conn.execute("SELECT COUNT(*) FROM agents").fetchone()[0]
-    if count > 0:
-        print(f"  ℹ️  agents table already has {count} rows — skipping seed")
-        return
+    """Insert seed agents idempotently."""
     for tg_id, name, role, compound in SEED_AGENTS:
-        conn.execute(
-            "INSERT INTO agents (telegram_user_id, name, role, compound, active) VALUES (?,?,?,?,1)",
-            (tg_id, name, role, compound)
-        )
+        count = conn.execute("SELECT COUNT(*) FROM agents WHERE telegram_user_id=? AND role=? AND (compound=? OR (compound IS NULL AND ? IS NULL))", (tg_id, role, compound, compound)).fetchone()[0]
+        if count == 0:
+            conn.execute(
+                "INSERT INTO agents (telegram_user_id, name, role, compound, active) VALUES (?,?,?,?,1)",
+                (tg_id, name, role, compound)
+            )
+    for tg_id, username, name, role, compound in SEED_AGENTS_EXTENDED:
+        count = conn.execute("SELECT COUNT(*) FROM agents WHERE telegram_username=? AND role=? AND (compound=? OR (compound IS NULL AND ? IS NULL))", (username, role, compound, compound)).fetchone()[0]
+        if count == 0:
+            conn.execute(
+                "INSERT INTO agents (telegram_user_id, telegram_username, name, role, compound, active) VALUES (?,?,?,?,?,1)",
+                (tg_id, username, name, role, compound)
+            )
     conn.commit()
-    print(f"  ✓ Seeded {len(SEED_AGENTS)} agent rows")
+    print("  ✓ Seeded agents")
 
 
 def load_services(conn, csv_path):

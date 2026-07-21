@@ -52,7 +52,12 @@ logger.addHandler(logging.StreamHandler(sys.stdout))
  APPROVAL_LIST, APPROVAL_DETAIL,
  APPROVAL_NOTE, _UNUSED_31,                 # _UNUSED_31 keeps indices stable
  COMPLETE_PHOTO,
- SUB_SERVICE) = range(35)                  # 3rd level of service hierarchy
+ SUB_SERVICE,                              # 3rd level of service hierarchy
+ # New workflow states
+ ASSIGN_LIST, ASSIGN_DETAIL, ASSIGN_TECH, ASSIGN_PRIORITY,
+ MY_JOBS_LIST, MY_JOB_DETAIL, TECH_INSPECT, TECH_INSPECT_TYPE, BOQ_PHOTO,
+ QUALITY_LIST, QUALITY_DETAIL, QUALITY_NOTE,
+ QUOTATION_LIST, QUOTATION_DETAIL, QUOTATION_NOTE) = range(48)
 
 # ── Status display ───────────────────────────────────────────────────
 STATUS_EMOJI = {
@@ -108,40 +113,75 @@ def mk_buttons(items: list, prefix: str, cols: int = 1, cancel: bool = True,
 
 
 # ── Role helpers ─────────────────────────────────────────────────────
-def _get_user_roles(uid: str) -> dict:
-    """Return {is_field_agent, is_approver, approver_roles} for a given TG user ID."""
+def _get_user_roles(uid: str, username: str = None) -> dict:
+    """Return dict of booleans for different roles for a given TG user ID or username."""
     conn = db()
+    
+    # Auto-link telegram_user_id if missing but username matches
+    if username:
+        # Telegram usernames are typically without '@' in the update object, but handle just in case
+        username = username.lstrip('@')
+        conn.execute(
+            "UPDATE agents SET telegram_user_id=? WHERE telegram_user_id='' AND telegram_username=? COLLATE SQL_Latin1_General_CP1_CI_AS", 
+            (uid, username)
+        )
+        conn.commit()
+
     rows = conn.execute(
         "SELECT DISTINCT role FROM agents WHERE telegram_user_id=? AND active=1", (uid,)
     ).fetchall()
     roles = {r["role"] for r in rows}
 
-    is_field = "field_agent" in roles
+    is_field = bool(roles & {"field_agent", "technician"})
+    is_supervisor = "supervisor" in roles
+    is_management = bool(roles & {"senior_engineer", "facility_manager"})
+    approver_roles = [r for r in ["approver_1", "approver_2"] if r in roles]
+    is_approver = bool(approver_roles)
+    
     # Backward-compat: agents in unit_agents but not agents table
-    if not is_field and not (roles & {"approver_1", "approver_2"}):
+    if not is_field and not (roles & {"approver_1", "approver_2", "supervisor", "senior_engineer", "facility_manager"}):
         count = conn.execute(
             "SELECT COUNT(*) FROM unit_agents WHERE telegram_user_id=?", (uid,)
         ).fetchone()[0]
-        is_field = count > 0
+        if count > 0:
+            is_field = True
     conn.close()
 
-    approver_roles = [r for r in ["approver_1", "approver_2"] if r in roles]
     return {
         "is_field_agent": is_field,
-        "is_approver": bool(approver_roles),
+        "is_supervisor": is_supervisor,
+        "is_management": is_management,
+        "is_approver": is_approver,
         "approver_roles": approver_roles,
+        "has_access": is_field or is_supervisor or is_management or is_approver
     }
 
 
 def _dynamic_main_menu_keyboard(context) -> InlineKeyboardMarkup:
     """Build main menu based on user roles stored in context.user_data."""
     buttons = []
+    
+    if context.user_data.get("is_supervisor"):
+        buttons.append([InlineKeyboardButton("👨‍🔧 Assign Tickets", callback_data="main:assign")])
+        buttons.append([InlineKeyboardButton("🔎 Quality Inspections", callback_data="main:quality_inspections")])
+        buttons.append([InlineKeyboardButton("📋 All Tickets", callback_data="main:all_tickets")])
+    
     if context.user_data.get("is_field_agent"):
-        buttons.append([InlineKeyboardButton("🆕 New Ticket", callback_data="main:new")])
-        buttons.append([InlineKeyboardButton("📋 Existing Tickets", callback_data="main:existing")])
+        buttons.append([InlineKeyboardButton("🆕 New Ticket (Legacy)", callback_data="main:new")])
+        if context.user_data.get("is_supervisor"):
+            buttons.append([InlineKeyboardButton("📋 Existing Tickets (Legacy)", callback_data="main:existing")])
+        else:
+            buttons.append([InlineKeyboardButton("🛠️ My Assigned Jobs", callback_data="main:my_jobs")])
+
+    if context.user_data.get("is_management"):
+        buttons.append([InlineKeyboardButton("📝 Quotation Approvals", callback_data="main:quotations")])
+        buttons.append([InlineKeyboardButton("🗂️ All Tickets", callback_data="main:all_tickets")])
+        
     if context.user_data.get("is_approver"):
         buttons.append([InlineKeyboardButton("✅ Pending Approvals", callback_data="main:approvals")])
-        buttons.append([InlineKeyboardButton("🗂️ All Tickets", callback_data="main:all_tickets")])
+        if not context.user_data.get("is_management") and not context.user_data.get("is_supervisor"):
+            buttons.append([InlineKeyboardButton("🗂️ All Tickets", callback_data="main:all_tickets")])
+            
     buttons.append([InlineKeyboardButton("❌ Cancel", callback_data="cancel")])
     return InlineKeyboardMarkup(buttons)
 
@@ -226,12 +266,13 @@ def _fmt_date(dt, chars=10):
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     uid = str(user.id)
-    logger.info(f"Start: uid={uid} name={user.first_name}")
+    username = user.username
+    logger.info(f"Start: uid={uid} username={username} name={user.first_name}")
 
-    roles = _get_user_roles(uid)
-    if not roles["is_field_agent"] and not roles["is_approver"]:
+    roles = _get_user_roles(uid, username)
+    if not roles["has_access"]:
         await update.message.reply_text(
-            f"⛔ You are not authorized.\n\nYour Telegram ID is: `{uid}`\nGive this ID to your administrator to be added.",
+            f"⛔ You are not authorized.\n\nYour Telegram ID is: `{uid}`\nYour username is: `@{username}`\nGive this info to your administrator to be added.",
             parse_mode="Markdown"
         )
         return ConversationHandler.END
@@ -279,6 +320,22 @@ async def main_menu_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data["tkt_page"] = 0
         context.user_data["approver_view"] = "all"
         return await _render_approver_all_tickets(query, context)
+
+    if action == "assign":
+        context.user_data["tkt_page"] = 0
+        return await _render_assign_list(query, context)
+
+    if action == "quality_inspections":
+        context.user_data["tkt_page"] = 0
+        return await _render_quality_list(query, context)
+        
+    if action == "my_jobs":
+        context.user_data["tkt_page"] = 0
+        return await _render_my_jobs_list(query, context)
+        
+    if action == "quotations":
+        context.user_data["tkt_page"] = 0
+        return await _render_quotation_list(query, context)
 
     # main:back
     await query.edit_message_text(
@@ -1633,6 +1690,570 @@ async def load_state_from_db(update: Update, context: ContextTypes.DEFAULT_TYPE)
         await context.application.persistence.refresh_chat_data(update.effective_chat.id, context.chat_data)
 
 
+
+
+# ── 1. Supervisor Assignment Workflow ────────────────────────────────
+async def _render_assign_list(query, context):
+    uid = context.user_data.get("agent_uid", str(query.from_user.id))
+    page = context.user_data.get("tkt_page", 0)
+    
+    # Unassigned tickets in supervisor's compounds
+    conn = db()
+    sql = """
+        SELECT id, unit, service, status, submitted_at FROM submissions 
+        WHERE status='submitted' AND assigned_technician_id IS NULL
+        AND compound IN (SELECT compound FROM agents WHERE telegram_user_id=? AND role='supervisor' AND active=1)
+        ORDER BY submitted_at ASC
+    """
+    rows = conn.execute(sql, (uid,)).fetchall()
+    conn.close()
+    
+    total = len(rows)
+    total_pages = max(1, (total + TICKETS_PER_PAGE - 1) // TICKETS_PER_PAGE)
+    page = max(0, min(page, total_pages - 1))
+    context.user_data["tkt_page"] = page
+
+    if not total:
+        await query.edit_message_text(
+            "✅ No unassigned tickets in your compounds.",
+            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back", callback_data="main:back")]])
+        )
+        return ASSIGN_LIST
+
+    page_rows = rows[page * TICKETS_PER_PAGE:(page + 1) * TICKETS_PER_PAGE]
+    buttons = []
+    for r in page_rows:
+        date = _fmt_date(r["submitted_at"], 10)
+        svc = (r["service"] or "?")[:18]
+        buttons.append([InlineKeyboardButton(f"🆕 #{r['id']} | {svc} | {date}", callback_data=f"asgn_tkt:{r['id']}")])
+
+    nav = []
+    if page > 0: nav.append(InlineKeyboardButton("◀️", callback_data="asgn_nav:prev"))
+    nav.append(InlineKeyboardButton(f"📄 {page+1}/{total_pages}", callback_data="asgn_nav:info"))
+    if page < total_pages - 1: nav.append(InlineKeyboardButton("▶️", callback_data="asgn_nav:next"))
+    buttons.append(nav)
+    buttons.append([InlineKeyboardButton("🔙 Back", callback_data="main:back")])
+
+    await query.edit_message_text(f"👨‍🔧 **Unassigned Tickets**\n{total} ticket(s) waiting:", reply_markup=InlineKeyboardMarkup(buttons), parse_mode="Markdown")
+    return ASSIGN_LIST
+
+async def assign_list_nav_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query; await query.answer()
+    action = query.data.split(":", 1)[1]
+    if action == "prev":
+        context.user_data["tkt_page"] = max(0, context.user_data.get("tkt_page", 0) - 1)
+    elif action == "next":
+        context.user_data["tkt_page"] = context.user_data.get("tkt_page", 0) + 1
+    elif action == "back":
+        return await main_menu_handler(update, context)
+    return await _render_assign_list(query, context)
+
+async def assign_ticket_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query; await query.answer()
+    tid = int(query.data.split(":", 1)[1])
+    context.user_data["view_ticket_id"] = tid
+    return await _render_assign_detail(query, context, tid)
+
+async def _render_assign_detail(query, context, tid):
+    conn = db()
+    row = conn.execute("SELECT * FROM submissions WHERE id=?", (tid,)).fetchone()
+    conn.close()
+    if not row:
+        await query.edit_message_text("❌ Ticket not found.")
+        return ASSIGN_LIST
+    
+    text = (
+        f"🎫 **Ticket #{row['id']}**\n\n"
+        f"🏠 Unit: {row['unit']}\n"
+        f"🔧 Service: {row['service']}\n"
+        f"📝 Issue: {row['issue_description'] or 'N/A'}\n"
+        f"📅 Submitted: {_fmt_date(row['submitted_at'], 16)}"
+    )
+    buttons = [
+        [InlineKeyboardButton("👨‍🔧 Assign to Technician", callback_data="asgn_action:assign")],
+        [InlineKeyboardButton("🔙 Back to List", callback_data="asgn_action:back")]
+    ]
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(buttons), parse_mode="Markdown")
+    return ASSIGN_DETAIL
+
+async def assign_detail_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query; await query.answer()
+    action = query.data.split(":", 1)[1]
+    if action == "back":
+        return await _render_assign_list(query, context)
+    
+    if action == "assign":
+        tid = context.user_data["view_ticket_id"]
+        # Get technicians for this compound
+        conn = db()
+        comp = conn.execute("SELECT compound FROM submissions WHERE id=?", (tid,)).fetchone()["compound"]
+        techs = conn.execute("SELECT telegram_user_id, name FROM agents WHERE role='technician' AND compound=? AND active=1", (comp,)).fetchall()
+        conn.close()
+        
+        if not techs:
+            await query.edit_message_text(
+                "❌ No active technicians found for this compound.",
+                reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back", callback_data="asgn_action:back")]])
+            )
+            return ASSIGN_DETAIL
+            
+        buttons = [[InlineKeyboardButton(t["name"], callback_data=f"sel_tech:{t['telegram_user_id']}")] for t in techs]
+        buttons.append([InlineKeyboardButton("🔙 Cancel", callback_data="asgn_action:back")])
+        await query.edit_message_text(f"👨‍🔧 Select technician for Ticket #{tid}:", reply_markup=InlineKeyboardMarkup(buttons))
+        return ASSIGN_TECH
+
+async def assign_tech_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query; await query.answer()
+    tech_id = query.data.split(":", 1)[1]
+    context.user_data["sel_tech_id"] = tech_id
+    
+    # Priority
+    buttons = [
+        [InlineKeyboardButton("🚨 Emergency (Dispatch immediately)", callback_data="sel_prio:emergency")],
+        [InlineKeyboardButton("📅 Normal (Schedule)", callback_data="sel_prio:normal")],
+        [InlineKeyboardButton("🔙 Cancel", callback_data="asgn_action:back")]
+    ]
+    await query.edit_message_text("Select Priority:", reply_markup=InlineKeyboardMarkup(buttons))
+    return ASSIGN_PRIORITY
+
+async def assign_priority_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query; await query.answer()
+    prio = query.data.split(":", 1)[1]
+    tid = context.user_data["view_ticket_id"]
+    tech_id = context.user_data["sel_tech_id"]
+    
+    conn = db()
+    conn.execute("UPDATE submissions SET status='assigned', priority=?, assigned_technician_id=? WHERE id=?", (prio, tech_id, tid))
+    conn.commit()
+    conn.close()
+    
+    # Notify tech
+    try:
+        await _notify(context.application, tech_id, f"🆕 *New Job Assigned: #{tid}*\nPriority: {prio.upper()}")
+    except Exception as e:
+        logger.error(f"Notify failed: {e}")
+        
+    await query.edit_message_text(f"✅ Ticket #{tid} assigned successfully.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to Unassigned", callback_data="main:assign")]]))
+    return ASSIGN_LIST
+
+# ── 2. Technician My Jobs Workflow ────────────────────────────────
+async def _render_my_jobs_list(query, context):
+    uid = context.user_data.get("agent_uid", str(query.from_user.id))
+    page = context.user_data.get("tkt_page", 0)
+    
+    conn = db()
+    sql = """
+        SELECT id, unit, service, status, submitted_at, priority FROM submissions 
+        WHERE assigned_technician_id=? AND status IN ('assigned', 'approved')
+        ORDER BY priority ASC, submitted_at ASC
+    """
+    rows = conn.execute(sql, (uid,)).fetchall()
+    conn.close()
+    
+    total = len(rows)
+    total_pages = max(1, (total + TICKETS_PER_PAGE - 1) // TICKETS_PER_PAGE)
+    page = max(0, min(page, total_pages - 1))
+    context.user_data["tkt_page"] = page
+
+    if not total:
+        await query.edit_message_text(
+            "✅ No active assigned jobs.",
+            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back", callback_data="main:back")]])
+        )
+        return MY_JOBS_LIST
+
+    page_rows = rows[page * TICKETS_PER_PAGE:(page + 1) * TICKETS_PER_PAGE]
+    buttons = []
+    for r in page_rows:
+        date = _fmt_date(r["submitted_at"], 10)
+        svc = (r["service"] or "?")[:18]
+        emoji = "🚨" if r["priority"] == "emergency" else "🔧"
+        buttons.append([InlineKeyboardButton(f"{emoji} #{r['id']} | {svc} | {date}", callback_data=f"job_tkt:{r['id']}")])
+
+    nav = []
+    if page > 0: nav.append(InlineKeyboardButton("◀️", callback_data="job_nav:prev"))
+    nav.append(InlineKeyboardButton(f"📄 {page+1}/{total_pages}", callback_data="job_nav:info"))
+    if page < total_pages - 1: nav.append(InlineKeyboardButton("▶️", callback_data="job_nav:next"))
+    buttons.append(nav)
+    buttons.append([InlineKeyboardButton("🔙 Back", callback_data="main:back")])
+
+    await query.edit_message_text(f"🛠️ **My Assigned Jobs**\n{total} job(s) pending:", reply_markup=InlineKeyboardMarkup(buttons), parse_mode="Markdown")
+    return MY_JOBS_LIST
+
+async def my_jobs_list_nav_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query; await query.answer()
+    action = query.data.split(":", 1)[1]
+    if action == "prev":
+        context.user_data["tkt_page"] = max(0, context.user_data.get("tkt_page", 0) - 1)
+    elif action == "next":
+        context.user_data["tkt_page"] = context.user_data.get("tkt_page", 0) + 1
+    elif action == "back":
+        return await main_menu_handler(update, context)
+    return await _render_my_jobs_list(query, context)
+
+async def my_job_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query; await query.answer()
+    tid = int(query.data.split(":", 1)[1])
+    context.user_data["view_ticket_id"] = tid
+    return await _render_my_job_detail(query, context, tid)
+
+async def _render_my_job_detail(query, context, tid):
+    conn = db()
+    row = conn.execute("SELECT * FROM submissions WHERE id=?", (tid,)).fetchone()
+    conn.close()
+    if not row:
+        return await _render_my_jobs_list(query, context)
+    
+    status = row["status"]
+    text = (
+        f"🎫 **Job #{row['id']}**\n\n"
+        f"🏠 Unit: {row['unit']}\n"
+        f"🔧 Service: {row['service']}\n"
+        f"📝 Issue: {row['issue_description'] or 'N/A'}\n"
+        f"🚨 Priority: {row['priority']}\n"
+    )
+    buttons = []
+    if status == "assigned":
+        buttons.append([InlineKeyboardButton("🔎 Perform Technical Inspection", callback_data="job_action:inspect")])
+    elif status == "approved":
+        buttons.append([InlineKeyboardButton("✅ Execute Work", callback_data="tkt_action:complete")]) # Reuse complete flow
+        
+    buttons.append([InlineKeyboardButton("🔙 Back to Jobs", callback_data="job_action:back")])
+    await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(buttons), parse_mode="Markdown")
+    return MY_JOB_DETAIL
+
+async def my_job_detail_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query; await query.answer()
+    action = query.data.split(":", 1)[1]
+    if action == "back":
+        return await _render_my_jobs_list(query, context)
+    
+    if action == "inspect":
+        await query.edit_message_text("📝 Enter diagnosis/inspection notes (min 5 chars):", 
+                                      reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("❌ Cancel", callback_data="cancel")]]))
+        return TECH_INSPECT
+
+async def tech_inspect_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text = sanitize(update.message.text.strip())
+    if len(text) < 5:
+        await update.message.reply_text("⚠️ At least 5 characters required.")
+        return TECH_INSPECT
+    context.user_data["inspection_diagnosis"] = text
+    
+    buttons = [
+        [InlineKeyboardButton("🔧 Minor Repair (No quote needed)", callback_data="insp_type:minor")],
+        [InlineKeyboardButton("🏗️ Major Repair (Needs BOQ/Quote)", callback_data="insp_type:major")],
+        [InlineKeyboardButton("❌ Cancel", callback_data="cancel")]
+    ]
+    await update.message.reply_text("Select repair complexity:", reply_markup=InlineKeyboardMarkup(buttons))
+    return TECH_INSPECT_TYPE
+
+async def tech_inspect_type_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query; await query.answer()
+    comp = query.data.split(":", 1)[1]
+    context.user_data["repair_complexity"] = comp
+    tid = context.user_data["view_ticket_id"]
+    
+    if comp == "minor":
+        conn = db()
+        conn.execute("UPDATE submissions SET inspection_diagnosis=?, repair_complexity=?, status='approved' WHERE id=?", 
+                     (context.user_data["inspection_diagnosis"], comp, tid))
+        conn.commit()
+        conn.close()
+        await query.edit_message_text(f"✅ Inspection saved as Minor Repair. You can now execute the work.", 
+                                      reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to Job", callback_data=f"job_tkt:{tid}")]]))
+        return MY_JOBS_LIST
+    else:
+        await query.edit_message_text("📸 Please upload a photo of the BOQ/Quotation document:")
+        return BOQ_PHOTO
+
+async def boq_photo_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    photo = update.message.photo[-1]
+    ok, url = await _save_photo(photo, "BOQ", context, key_path="boq_path", key_fid="boq_file_id")
+    if not ok:
+        await update.message.reply_text("❌ Upload failed. Try again.")
+        return BOQ_PHOTO
+    
+    tid = context.user_data["view_ticket_id"]
+    conn = db()
+    conn.execute("UPDATE submissions SET inspection_diagnosis=?, repair_complexity=?, boq_path=?, boq_file_id=?, status='pending_quotation_approval' WHERE id=?", 
+                 (context.user_data["inspection_diagnosis"], "major", context.user_data["boq_path"], context.user_data["boq_file_id"], tid))
+    
+    # Notify management
+    tkt = conn.execute("SELECT compound, unit FROM submissions WHERE id=?", (tid,)).fetchone()
+    conn.commit()
+    conn.close()
+    
+    if tkt and tkt["compound"]:
+        for role in ["senior_engineer", "facility_manager"]:
+            for auid in _get_role_uids_for_compound(tkt["compound"], role):
+                try:
+                    await _notify(context.application, auid, f"📝 *New Quotation for Approval: #{tid}*\n🏠 {tkt['unit']}")
+                except:
+                    pass
+                
+    await update.message.reply_text("✅ Major Repair quotation submitted for management approval.",
+                                    reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to Jobs", callback_data="main:my_jobs")]]))
+    return MY_JOBS_LIST
+
+# ── 3. Quality Inspection (Supervisor) ────────────────────────────────
+async def _render_quality_list(query, context):
+    uid = context.user_data.get("agent_uid", str(query.from_user.id))
+    page = context.user_data.get("tkt_page", 0)
+    
+    conn = db()
+    sql = """
+        SELECT id, unit, service, status, submitted_at FROM submissions 
+        WHERE status='closed' AND resident_confirmed=0
+        AND compound IN (SELECT compound FROM agents WHERE telegram_user_id=? AND role='supervisor' AND active=1)
+        ORDER BY work_done_at DESC
+    """
+    rows = conn.execute(sql, (uid,)).fetchall()
+    conn.close()
+    
+    total = len(rows)
+    total_pages = max(1, (total + TICKETS_PER_PAGE - 1) // TICKETS_PER_PAGE)
+    page = max(0, min(page, total_pages - 1))
+    context.user_data["tkt_page"] = page
+
+    if not total:
+        await query.edit_message_text(
+            "✅ No completed jobs pending quality inspection.",
+            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back", callback_data="main:back")]])
+        )
+        return QUALITY_LIST
+
+    page_rows = rows[page * TICKETS_PER_PAGE:(page + 1) * TICKETS_PER_PAGE]
+    buttons = []
+    for r in page_rows:
+        date = _fmt_date(r["submitted_at"], 10)
+        svc = (r["service"] or "?")[:18]
+        buttons.append([InlineKeyboardButton(f"🔎 #{r['id']} | {svc} | {date}", callback_data=f"qual_tkt:{r['id']}")])
+
+    nav = []
+    if page > 0: nav.append(InlineKeyboardButton("◀️", callback_data="qual_nav:prev"))
+    nav.append(InlineKeyboardButton(f"📄 {page+1}/{total_pages}", callback_data="qual_nav:info"))
+    if page < total_pages - 1: nav.append(InlineKeyboardButton("▶️", callback_data="qual_nav:next"))
+    buttons.append(nav)
+    buttons.append([InlineKeyboardButton("🔙 Back", callback_data="main:back")])
+
+    await query.edit_message_text(f"🔎 **Quality Inspections**\n{total} job(s) pending review:", reply_markup=InlineKeyboardMarkup(buttons), parse_mode="Markdown")
+    return QUALITY_LIST
+
+async def quality_list_nav_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query; await query.answer()
+    action = query.data.split(":", 1)[1]
+    if action == "prev":
+        context.user_data["tkt_page"] = max(0, context.user_data.get("tkt_page", 0) - 1)
+    elif action == "next":
+        context.user_data["tkt_page"] = context.user_data.get("tkt_page", 0) + 1
+    elif action == "back":
+        return await main_menu_handler(update, context)
+    return await _render_quality_list(query, context)
+
+async def quality_ticket_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query; await query.answer()
+    tid = int(query.data.split(":", 1)[1])
+    context.user_data["view_ticket_id"] = tid
+    return await _render_quality_detail(query, context, tid)
+
+async def _render_quality_detail(query, context, tid):
+    conn = db()
+    row = conn.execute("SELECT * FROM submissions WHERE id=?", (tid,)).fetchone()
+    conn.close()
+    if not row:
+        return await _render_quality_list(query, context)
+    
+    photo = "📎 Attached" if row["completion_photo_file_id"] else "None"
+    text = (
+        f"🎫 **Ticket #{row['id']} Completed Work**\n\n"
+        f"🏠 Unit: {row['unit']}\n"
+        f"🔧 Service: {row['service']}\n"
+        f"💰 Cost: {row['actual_cost']}\n"
+        f"📸 Photo: {photo}\n"
+    )
+    buttons = [
+        [InlineKeyboardButton("✅ Approve Quality", callback_data="qual_action:approve")],
+        [InlineKeyboardButton("❌ Reject (Needs Rework)", callback_data="qual_action:reject")],
+        [InlineKeyboardButton("🔙 Back to List", callback_data="qual_action:back")]
+    ]
+    if row["completion_photo_file_id"]:
+        try:
+            await query.message.reply_photo(photo=row["completion_photo_file_id"], caption=text, reply_markup=InlineKeyboardMarkup(buttons), parse_mode="Markdown")
+        except:
+            await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(buttons), parse_mode="Markdown")
+    else:
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(buttons), parse_mode="Markdown")
+    return QUALITY_DETAIL
+
+async def quality_detail_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query; await query.answer()
+    action = query.data.split(":", 1)[1]
+    if action == "back":
+        return await _render_quality_list(query, context)
+    
+    context.user_data["qual_action"] = action
+    await query.edit_message_text("📝 Enter inspection note (optional):", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("⏭️ Skip", callback_data="qual_note:skip"), InlineKeyboardButton("❌ Cancel", callback_data="cancel")]]))
+    return QUALITY_NOTE
+
+async def quality_note_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text = ""
+    if update.message:
+        text = sanitize(update.message.text.strip())
+    
+    action = context.user_data["qual_action"]
+    tid = context.user_data["view_ticket_id"]
+    uid = context.user_data.get("agent_uid", "?")
+    
+    conn = db()
+    tkt = conn.execute("SELECT telegram_user_id, assigned_technician_id, unit, service FROM submissions WHERE id=?", (tid,)).fetchone()
+    if action == "approve":
+        conn.execute("UPDATE submissions SET quality_inspector_id=?, status='quality_approved' WHERE id=?", (uid, tid))
+        # Notify resident
+        if tkt and tkt["telegram_user_id"]:
+            resident_msg = f"✅ *Work Completed: #{tid}*\nYour maintenance request for {tkt['service']} is done.\nPlease confirm satisfactory completion by replying to this bot or using the menu."
+            try:
+                await _notify(context.application, tkt["telegram_user_id"], resident_msg)
+            except: pass
+    else:
+        # Reject - goes back to assigned
+        conn.execute("UPDATE submissions SET status='assigned' WHERE id=?", (tid,))
+        if tkt and tkt["assigned_technician_id"]:
+            try:
+                await _notify(context.application, tkt["assigned_technician_id"], f"❌ *Work Rejected: #{tid}*\nNotes: {text}\nPlease rework and resubmit.")
+            except: pass
+            
+    conn.commit()
+    conn.close()
+    
+    if update.message:
+        await update.message.reply_text(f"✅ Quality inspection saved.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to List", callback_data="main:quality_inspections")]]))
+    else:
+        await update.callback_query.edit_message_text(f"✅ Quality inspection saved.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to List", callback_data="main:quality_inspections")]]))
+    return QUALITY_LIST
+
+# ── 4. Quotation Approval Workflow (Management) ──────────────────────
+async def _render_quotation_list(query, context):
+    uid = context.user_data.get("agent_uid", str(query.from_user.id))
+    page = context.user_data.get("tkt_page", 0)
+    
+    conn = db()
+    sql = """
+        SELECT id, unit, service, status, submitted_at FROM submissions 
+        WHERE status='pending_quotation_approval'
+        AND compound IN (SELECT compound FROM agents WHERE telegram_user_id=? AND role IN ('senior_engineer', 'facility_manager') AND active=1)
+        ORDER BY submitted_at ASC
+    """
+    rows = conn.execute(sql, (uid,)).fetchall()
+    conn.close()
+    
+    total = len(rows)
+    total_pages = max(1, (total + TICKETS_PER_PAGE - 1) // TICKETS_PER_PAGE)
+    page = max(0, min(page, total_pages - 1))
+    context.user_data["tkt_page"] = page
+
+    if not total:
+        await query.edit_message_text("✅ No pending quotations.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back", callback_data="main:back")]]))
+        return QUOTATION_LIST
+
+    page_rows = rows[page * TICKETS_PER_PAGE:(page + 1) * TICKETS_PER_PAGE]
+    buttons = []
+    for r in page_rows:
+        date = _fmt_date(r["submitted_at"], 10)
+        svc = (r["service"] or "?")[:18]
+        buttons.append([InlineKeyboardButton(f"📝 #{r['id']} | {svc} | {date}", callback_data=f"quot_tkt:{r['id']}")])
+
+    nav = []
+    if page > 0: nav.append(InlineKeyboardButton("◀️", callback_data="quot_nav:prev"))
+    nav.append(InlineKeyboardButton(f"📄 {page+1}/{total_pages}", callback_data="quot_nav:info"))
+    if page < total_pages - 1: nav.append(InlineKeyboardButton("▶️", callback_data="quot_nav:next"))
+    buttons.append(nav)
+    buttons.append([InlineKeyboardButton("🔙 Back", callback_data="main:back")])
+
+    await query.edit_message_text(f"📝 **Quotation Approvals**\n{total} pending:", reply_markup=InlineKeyboardMarkup(buttons), parse_mode="Markdown")
+    return QUOTATION_LIST
+
+async def quotation_list_nav_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query; await query.answer()
+    action = query.data.split(":", 1)[1]
+    if action == "prev": context.user_data["tkt_page"] = max(0, context.user_data.get("tkt_page", 0) - 1)
+    elif action == "next": context.user_data["tkt_page"] = context.user_data.get("tkt_page", 0) + 1
+    elif action == "back": return await main_menu_handler(update, context)
+    return await _render_quotation_list(query, context)
+
+async def quotation_ticket_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query; await query.answer()
+    tid = int(query.data.split(":", 1)[1])
+    context.user_data["view_ticket_id"] = tid
+    return await _render_quotation_detail(query, context, tid)
+
+async def _render_quotation_detail(query, context, tid):
+    conn = db()
+    row = conn.execute("SELECT * FROM submissions WHERE id=?", (tid,)).fetchone()
+    conn.close()
+    if not row: return await _render_quotation_list(query, context)
+    
+    photo = "📎 Attached" if row["boq_file_id"] else "None"
+    text = (
+        f"🎫 **Ticket #{row['id']} BOQ Quotation**\n\n"
+        f"🏠 Unit: {row['unit']}\n"
+        f"🔧 Service: {row['service']}\n"
+        f"📝 Diagnosis: {row['inspection_diagnosis']}\n"
+        f"📸 BOQ: {photo}\n"
+    )
+    buttons = [
+        [InlineKeyboardButton("✅ Approve BOQ", callback_data="quot_action:approve")],
+        [InlineKeyboardButton("❌ Reject BOQ", callback_data="quot_action:reject")],
+        [InlineKeyboardButton("🔙 Back to List", callback_data="quot_action:back")]
+    ]
+    if row["boq_file_id"]:
+        try:
+            await query.message.reply_photo(photo=row["boq_file_id"], caption=text, reply_markup=InlineKeyboardMarkup(buttons), parse_mode="Markdown")
+        except:
+            await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(buttons), parse_mode="Markdown")
+    else:
+        await query.edit_message_text(text, reply_markup=InlineKeyboardMarkup(buttons), parse_mode="Markdown")
+    return QUOTATION_DETAIL
+
+async def quotation_detail_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query; await query.answer()
+    action = query.data.split(":", 1)[1]
+    if action == "back": return await _render_quotation_list(query, context)
+    
+    context.user_data["quot_action"] = action
+    await query.edit_message_text("📝 Enter approval/rejection note (optional):", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("⏭️ Skip", callback_data="quot_note:skip"), InlineKeyboardButton("❌ Cancel", callback_data="cancel")]]))
+    return QUOTATION_NOTE
+
+async def quotation_note_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text = ""
+    if update.message: text = sanitize(update.message.text.strip())
+    
+    action = context.user_data["quot_action"]
+    tid = context.user_data["view_ticket_id"]
+    
+    conn = db()
+    tkt = conn.execute("SELECT assigned_technician_id FROM submissions WHERE id=?", (tid,)).fetchone()
+    if action == "approve":
+        conn.execute("UPDATE submissions SET status='approved' WHERE id=?", (tid,))
+        msg = f"✅ *Quotation Approved: #{tid}*\nYou can now execute the work."
+    else:
+        conn.execute("UPDATE submissions SET status='assigned', repair_complexity=NULL, boq_file_id=NULL WHERE id=?", (tid,))
+        msg = f"❌ *Quotation Rejected: #{tid}*\nNotes: {text}\nPlease submit a new quotation."
+    
+    if tkt and tkt["assigned_technician_id"]:
+        try: await _notify(context.application, tkt["assigned_technician_id"], msg)
+        except: pass
+            
+    conn.commit()
+    conn.close()
+    
+    if update.message:
+        await update.message.reply_text("✅ BOQ Decision saved.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to List", callback_data="main:quotations")]]))
+    else:
+        await update.callback_query.edit_message_text("✅ BOQ Decision saved.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🔙 Back to List", callback_data="main:quotations")]]))
+    return QUOTATION_LIST
+
+
 def create_application():
     """Create and configure the PTB Application. Called by both polling and webhook modes."""
     if not TOKEN:
@@ -1734,6 +2355,68 @@ def create_application():
                 MessageHandler(filters.TEXT & ~filters.COMMAND, approval_note_handler),
                 CallbackQueryHandler(approval_note_handler, pattern=r"^approval_note:"),
             ],
+            
+            # ── Supervisor Assignment Workflow ──────────────────────
+            ASSIGN_LIST: [
+                CallbackQueryHandler(assign_ticket_handler, pattern=r"^asgn_tkt:\d+$"),
+                CallbackQueryHandler(assign_list_nav_handler, pattern=r"^asgn_nav:"),
+            ],
+            ASSIGN_DETAIL: [
+                CallbackQueryHandler(assign_detail_handler, pattern=r"^asgn_action:"),
+            ],
+            ASSIGN_TECH: [
+                CallbackQueryHandler(assign_tech_handler, pattern=r"^sel_tech:"),
+                CallbackQueryHandler(assign_detail_handler, pattern=r"^asgn_action:"),
+            ],
+            ASSIGN_PRIORITY: [
+                CallbackQueryHandler(assign_priority_handler, pattern=r"^sel_prio:"),
+                CallbackQueryHandler(assign_detail_handler, pattern=r"^asgn_action:"),
+            ],
+            # ── Technician My Jobs Workflow ────────────────────────
+            MY_JOBS_LIST: [
+                CallbackQueryHandler(my_job_handler, pattern=r"^job_tkt:\d+$"),
+                CallbackQueryHandler(my_jobs_list_nav_handler, pattern=r"^job_nav:"),
+            ],
+            MY_JOB_DETAIL: [
+                CallbackQueryHandler(my_job_detail_handler, pattern=r"^job_action:"),
+                CallbackQueryHandler(ticket_detail_handler, pattern=r"^tkt_action:"),
+            ],
+            TECH_INSPECT: [
+                MessageHandler(filters.TEXT & ~filters.COMMAND, tech_inspect_handler),
+                CallbackQueryHandler(cancel, pattern=r"^cancel$"),
+            ],
+            TECH_INSPECT_TYPE: [
+                CallbackQueryHandler(tech_inspect_type_handler, pattern=r"^insp_type:"),
+                CallbackQueryHandler(cancel, pattern=r"^cancel$"),
+            ],
+            BOQ_PHOTO: [
+                MessageHandler(filters.PHOTO, boq_photo_handler),
+            ],
+            # ── Supervisor Quality Workflow ────────────────────────
+            QUALITY_LIST: [
+                CallbackQueryHandler(quality_ticket_handler, pattern=r"^qual_tkt:\d+$"),
+                CallbackQueryHandler(quality_list_nav_handler, pattern=r"^qual_nav:"),
+            ],
+            QUALITY_DETAIL: [
+                CallbackQueryHandler(quality_detail_handler, pattern=r"^qual_action:"),
+            ],
+            QUALITY_NOTE: [
+                MessageHandler(filters.TEXT & ~filters.COMMAND, quality_note_handler),
+                CallbackQueryHandler(quality_note_handler, pattern=r"^qual_note:"),
+            ],
+            # ── Management Quotation Workflow ──────────────────────
+            QUOTATION_LIST: [
+                CallbackQueryHandler(quotation_ticket_handler, pattern=r"^quot_tkt:\d+$"),
+                CallbackQueryHandler(quotation_list_nav_handler, pattern=r"^quot_nav:"),
+            ],
+            QUOTATION_DETAIL: [
+                CallbackQueryHandler(quotation_detail_handler, pattern=r"^quot_action:"),
+            ],
+            QUOTATION_NOTE: [
+                MessageHandler(filters.TEXT & ~filters.COMMAND, quotation_note_handler),
+                CallbackQueryHandler(quotation_note_handler, pattern=r"^quot_note:"),
+            ],
+
             ConversationHandler.TIMEOUT: [
                 MessageHandler(filters.ALL, timeout_handler),
                 CallbackQueryHandler(timeout_handler),

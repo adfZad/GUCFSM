@@ -589,7 +589,7 @@ async def followup_id_handler(update: Update, context: ContextTypes.DEFAULT_TYPE
         return FOLLOWUP_ID
 
     conn = db()
-    row = conn.execute("SELECT id, unit, service, issue_description FROM submissions WHERE id=?", (int(rid),)).fetchone()
+    row = conn.execute("SELECT id, unit, service, issue_description, status, resident_confirmed FROM submissions WHERE id=?", (int(rid),)).fetchone()
     conn.close()
 
     if not row:
@@ -607,10 +607,24 @@ async def followup_id_handler(update: Update, context: ContextTypes.DEFAULT_TYPE
     context.user_data["category"] = "Follow Up"
     context.user_data["_back_target"] = "followup_note"
 
+    if row["status"] == "quality_approved" and row.get("resident_confirmed", 0) == 0:
+        await update.message.reply_text(
+            f"✅ **Ticket #{rid} is marked as completed by quality inspection.**\n"
+            f"Service: {row['service']}\n\n"
+            "Please confirm if the work was completed satisfactorily:",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("✅ Confirm Completion", callback_data=f"res_conf:{rid}")],
+                [InlineKeyboardButton("🔙 Back", callback_data="back:fuid")]
+            ]),
+            parse_mode="Markdown"
+        )
+        return FOLLOWUP_STATUS
+
     await update.message.reply_text(
         f"🔄 Following up on **#{rid}** — {row['service']}\n"
-        f"_\"{row['issue_description'][:80]}...\"_\n\n"
-        "Select status:",
+        f"Status: **{row['status']}**\n"
+        f"_\"{row['issue_description'][:80] if row['issue_description'] else 'N/A'}...\"_\n\n"
+        "Select what you want to report:",
         reply_markup=mk_buttons(FOLLOWUP_STATUSES, "fstatus", back_cb="back:fuid"),
         parse_mode="Markdown"
     )
@@ -619,6 +633,16 @@ async def followup_id_handler(update: Update, context: ContextTypes.DEFAULT_TYPE
 
 async def followup_status_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query; await query.answer()
+    
+    if query.data.startswith("res_conf:"):
+        rid = int(query.data.split(":")[1])
+        conn = db()
+        conn.execute("UPDATE submissions SET resident_confirmed=1, status='closed' WHERE id=?", (rid,))
+        conn.commit()
+        conn.close()
+        await query.edit_message_text(f"✅ **Thank you!** Ticket #{rid} has been successfully closed.", parse_mode="Markdown")
+        return ConversationHandler.END
+
     idx = int(query.data.split(":")[1])
     context.user_data["followup_status"] = FOLLOWUP_STATUSES[idx]
     context.user_data["_back_target"] = "followup_note"
